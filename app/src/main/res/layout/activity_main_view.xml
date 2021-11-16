@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.MainViewActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/bg_blue"
+            android:layout_height="wrap_content">
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="end"
+                android:layout_margin="8dp"
+                android:layout_height="wrap_content">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ProfilePicture"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:civ_border_color="@color/secondary"
+                    app:civ_border_width="3dp"
+                    android:src="@drawable/user"
+                    />
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/choose_county"
+                            android:layout_width="wrap_content"
+                            android:text="Choose category "
+                            android:textSize="17dp"
+                            android:drawableRight="@drawable/ic_arrow_drop"
+                            android:drawableTint="@color/secondary"
+                            android:layout_margin="8dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+
+                    <FrameLayout
+                        android:visibility="gone"
+                        android:id="@+id/FrameCategory"
+                        android:layout_width="180dp"
+                        android:layout_margin="8dp"
+                        android:layout_height="300dp">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_category"
+                            android:padding="5dp"
+                            android:layout_width="180dp"
+                            android:layout_height="300dp">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                app:fab_size="mini"
+                android:layout_gravity="center_horizontal"
+                app:fab_colorNormal="@color/secondary"
+                app:fab_colorPressed="@color/primary"
+                app:fab_icon="@drawable/ic_earch"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/SwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_provider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

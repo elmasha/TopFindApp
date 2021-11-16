@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ProfileActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_blue"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/LogOut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:drawableRight="@drawable/ic_logout"
+                    android:drawableTint="@color/ColorRed"
+                    android:text="LogOut  "
+                    android:textColor="@color/ColorRed"
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/Tf_userImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="20dp"
+                    android:src="@drawable/user"
+                    app:civ_border_color="@color/secondary"
+                    app:civ_border_width="3dp" />
+
+
+
+
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:padding="10dp"
+            android:background="@drawable/bg_white"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    app:fab_icon="@drawable/ic_edit"
+                    app:fab_size="mini"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    app:fab_colorNormal="@color/secondary"
+                    app:fab_colorPressed="@color/secondary"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textSize="19dp"
+                    android:textColor="@color/primary"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Profile"/>
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Username"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="19dp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/Tf_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="80dp"
+                        android:text="Elmasha Omon"
+                        android:textColor="@color/secondary"
+                        android:textSize="19dp"
+                        />
+
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Email"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="19dp"
+                        android:textStyle="bold" />
+
+
+
+
+                    <TextView
+                        android:id="@+id/Tf_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="90dp"
+                        android:text=" elmashavitran@gmail.com"
+                        android:textColor="@color/secondary"
+                        android:textSize="17dp" />
+
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Phone"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="19dp"
+                        android:textStyle="bold" />
+
+
+
+                    <TextView
+                        android:id="@+id/Tf_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3444565"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="90dp"
+                        android:textColor="@color/secondary"
+                        android:textSize="18dp" />
+
+
+
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Loaction"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="19dp"
+                        android:textStyle="bold" />
+
+
+
+
+                    <TextView
+                        android:id="@+id/Tf_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="90dp"
+                        android:text=" Nairobi"
+                        android:textColor="@color/secondary"
+                        android:textSize="17dp" />
+
+
+
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>

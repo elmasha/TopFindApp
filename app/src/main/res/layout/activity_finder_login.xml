@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.Service.FinderLoginActivity">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/bg_blue"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/BackToMain2"
+                android:layout_width="wrap_content"
+                android:drawableLeft="@drawable/ic_west"
+                android:layout_margin="20dp"
+                android:layout_height="wrap_content"/>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="40dp"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="29dp"
+                        android:text="Welcome"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="29dp"
+                        android:text="Back."/>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_margin="5dp"
+                    android:textSize="15dp"
+                    android:text="Log in to your current account"/>
+
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_login"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textEmailAddress"
+                    android:drawableRight="@drawable/ic_mail"
+                    android:layout_height="wrap_content"
+                    android:hint="Email address *"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_login"
+                android:layout_width="300dp"
+                android:layout_margin="10dp"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textPassword"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Password*"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/Btn_login"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:background="@drawable/btn_round_green"
+            android:text="Log in"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="19dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="I don't have an account?"
+                android:textColor="@color/primary"
+                android:textSize="14dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/ToRegister"
+                android:layout_width="wrap_content"
+                android:text="Register"
+                android:textColor="@color/secondary"
+                android:textSize="15dp"
+                android:layout_marginStart="4dp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+</androidx.core.widget.NestedScrollView>

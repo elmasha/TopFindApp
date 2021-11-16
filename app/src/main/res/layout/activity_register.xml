@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ProviderRegisterActivity">
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/bg_black"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/BackToMain"
+                android:layout_width="wrap_content"
+                android:drawableLeft="@drawable/ic_west"
+                android:layout_margin="5dp"
+                android:layout_height="wrap_content"/>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="19dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary"
+                    android:textStyle="bold"
+                    android:textSize="22dp"
+                    android:text="Create a new account"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="17dp"
+                    android:text="Please fill all inputs with *"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add_Photo"
+                    android:layout_width="wrap_content"
+                    app:fab_colorNormal="@color/secondary"
+                    app:fab_size="normal"
+                    app:fab_colorPressed="@color/primary"
+                    android:layout_gravity="center_horizontal"
+                    app:fab_icon="@drawable/ic_add_a_photo_24"
+                    android:layout_height="wrap_content"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="60dp"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    app:civ_border_color="@color/secondary"
+                    android:src="@drawable/user"
+                    app:civ_border_width="2dp"
+                    android:layout_marginStart="30dp"
+                    android:id="@+id/profileImage"
+                    android:layout_height="60dp"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content">
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/first_name"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textPersonName"
+                    android:drawableRight="@drawable/ic_person"
+                    android:layout_height="wrap_content"
+                    android:hint="Full name*"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/location"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textPersonName"
+                    android:drawableRight="@drawable/ic_location"
+                    android:layout_height="wrap_content"
+                    android:hint="Location *"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_address"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textEmailAddress"
+                    android:drawableRight="@drawable/ic_mail"
+                    android:layout_height="wrap_content"
+                    android:hint="Email address *"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phone_no"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="phone"
+                    android:drawableRight="@drawable/ic_phone"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter phone No. *"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Profession"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textPersonName"
+                    android:drawableRight="@drawable/ic_supervised"
+                    android:layout_height="wrap_content"
+                    android:hint="Profession*"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <Spinner
+                android:id="@+id/Experience"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:entries="@array/experience"/>
+
+
+
+            <Spinner
+                android:id="@+id/PaymentMethod"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:entries="@array/payment"/>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Narration"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:gravity="top|left"
+                    android:minLines="5"
+                    android:drawableRight="@drawable/ic_write"
+                    android:layout_height="wrap_content"
+                    android:hint="Narration*"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password"
+                android:layout_width="300dp"
+                app:passwordToggleEnabled="true"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textPassword"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Password*"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/retry_password"
+                android:layout_width="300dp"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:inputType="textPassword"
+                    android:layout_height="wrap_content"
+                    android:hint="Repeat Password*"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/grey"
+                android:text="I agree to the terms and conditions "/>
+
+
+            <Button
+                android:id="@+id/Btn_register"
+                android:layout_width="200dp"
+                android:text="Register"
+                android:textColor="@color/white"
+                android:layout_margin="5dp"
+                android:textSize="19dp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/btn_round_blue"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Already have an account?"
+                android:textColor="@color/primary"
+                android:textSize="14dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/ToLogin"
+                android:layout_width="wrap_content"
+                android:text="Sign in"
+                android:textColor="@color/secondary"
+                android:textSize="15dp"
+                android:layout_marginStart="4dp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>

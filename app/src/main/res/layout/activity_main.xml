@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/Slide_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp" />
+
+
+
+
+
+    </RelativeLayout>
+
+    <!--    <ImageView-->
+    <!--        android:background="@drawable/pp1"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:alpha="0.8"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        />-->
+
+
+
+
+
+    <RelativeLayout
+        android:gravity="bottom|center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <LinearLayout
+            android:id="@+id/LayoutChoose"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="120dp"
+            android:layout_height="wrap_content">
+
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:text="Looking for services"
+                    android:id="@+id/radio2"
+                    android:textSize="17dp"
+                    android:textColor="@color/secondary"
+                    android:layout_height="wrap_content"/>
+
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:text="I'm a service Provider"
+                    android:id="@+id/radio1"
+                    android:textSize="17dp"
+                    android:textColor="@color/secondary"
+                    android:layout_height="wrap_content"/>
+
+
+
+
+
+            </RadioGroup>
+
+
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/Dot_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:padding="20dp"></LinearLayout>
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:id="@+id/Launch_Layout"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content">
+
+
+                <Button
+                    android:id="@+id/get_Started"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text=" Get Started "
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="17dp"
+                    android:background="@drawable/btn_round_blue"
+                    android:textColor="@color/white"
+                     />
+
+
+
+
+            </LinearLayout>
+
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/Back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:fab_icon="@drawable/ic_back"
+                app:fab_colorNormal="@color/secondary"
+                app:fab_colorPressed="@color/white"
+                app:fab_size="mini"
+                android:textStyle="bold"
+                 />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/Next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_size="normal"
+                android:layout_margin="10dp"
+                app:fab_colorNormal="@color/secondary"
+                app:fab_icon="@drawable/ic_next"
+                app:fab_colorPressed="@color/white"
+                android:background="@color/white"
+                android:textColor="@color/primary"
+                android:text="Swipe >>"
+                 />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
