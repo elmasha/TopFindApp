@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="10dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/RequestImage"
+                    android:layout_width="100dp"
+                    android:layout_gravity="center_horizontal"
+                    app:civ_border_color="@color/primary"
+                    app:civ_border_width="3dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/user"/>
+
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                >
+
+
+                <TextView
+                    android:id="@+id/NameRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Elmasha Omon"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/secondary"
+                    android:textSize="19dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/EmailRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="elmashavitran@gmail.com"
+                    android:textColor="@color/secondary"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/PhoneRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3444565"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+
+
+
+                <TextView
+                    android:id="@+id/LocationRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Nairobi"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"
+                    android:drawableTint="@color/secondary"
+                    android:textColor="@color/secondary"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/ProfessionRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"
+                    android:drawableTint="@color/primary"
+                    android:textColor="@color/secondary"
+                    android:textSize="16dp" />
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/SendRequest"
+                        android:layout_width="130dp"
+                        android:layout_height="45dp"
+                        android:text="Send request"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:layout_margin="8dp"
+                        android:textAllCaps="false"
+                        android:background="@drawable/btn_round_blue"
+                        android:textColor="@color/primary"
+                        android:textSize="16dp" />
+
+
+                    <TextView
+                        android:id="@+id/CancelRequest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel "
+                        android:layout_margin="8dp"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        android:textColor="@color/secondary"
+                        android:textSize="21dp" />
+
+
+
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</FrameLayout>

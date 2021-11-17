@@ -78,7 +78,7 @@ public class FinderLoginActivity extends AppCompatActivity {
         toRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent logout = new Intent(getApplicationContext(), ProviderRegisterActivity.class);
+                Intent logout = new Intent(getApplicationContext(), FinderRegisterActivity.class);
                 logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(logout);
             }

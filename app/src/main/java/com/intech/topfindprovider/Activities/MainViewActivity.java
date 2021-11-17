@@ -1,6 +1,9 @@
 package com.intech.topfindprovider.Activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -11,15 +14,22 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
@@ -27,6 +37,10 @@ import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,7 +48,9 @@ public class MainViewActivity extends AppCompatActivity {
     private long backPressedTime;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference TopFindRef = db.collection("TopFind_Provider");
+    CollectionReference TopFindRef = db.collection("TopFind_Clients");
+    CollectionReference TopFindProRef = db.collection("TopFind_Provider");
+    CollectionReference FindRequestRef = db.collection("TopFind_Request");
 
     private CircleImageView profileImage;
 
@@ -87,12 +103,65 @@ public class MainViewActivity extends AppCompatActivity {
 
 
 
+    private AlertDialog dialog_sendRequest;
+    private TextView emailInput,usernameInput,Location,ReCancel,ReProfession;
+    private String Reqemail,Requsername,Reqphone,ReqProfileImage,ReQuestLocation,RequestID,ReqProfession;
+    private Button BtnConfirm;
+    private CircleImageView ReQuestImage;
+    private LinearLayout google,facebook;
+    private ProgressBar progressBarMpesa;
+
+    private void RequestDialog(){
+        final  AlertDialog.Builder mbuilder = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_send_request, null);
+        mbuilder.setView(mView);
+        dialog_sendRequest = mbuilder.create();
+        dialog_sendRequest.show();
+        emailInput = mView.findViewById(R.id.EmailRequest);
+        usernameInput = mView.findViewById(R.id.NameRequest);
+        BtnConfirm = mView.findViewById(R.id.SendRequest);
+        Location = mView.findViewById(R.id.LocationRequest);
+        ReCancel = mView.findViewById(R.id.CancelRequest);
+        ReQuestImage = mView.findViewById(R.id.RequestImage);
+        ReProfession = mView.findViewById(R.id.ProfessionRequest);
+
+        usernameInput.setText(Requsername);
+        emailInput.setText(Reqemail);
+        Location.setText(ReQuestLocation);
+        ReProfession.setText(ReqProfession);
+        if (ReqProfileImage != null){
+            Picasso.with(getApplicationContext())
+                    .load(ReqProfileImage).placeholder(R.drawable.user)
+                    .error(R.drawable.errorimage)
+                    .into(ReQuestImage);
+        }
+
+
+
+        ReCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+
+            }
+        });
+
+        BtnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SendRequest();
+            }
+        });
+
+
+    }
+
     private void FetchProduct() {
 
         //       Query query = TopFindRef
 //                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
         FirestoreRecyclerOptions<TopFindProviders> transaction = new FirestoreRecyclerOptions.Builder<TopFindProviders>()
-                .setQuery(TopFindRef, TopFindProviders.class)
+                .setQuery(TopFindProRef, TopFindProviders.class)
                 .setLifecycleOwner(this)
                 .build();
         adapter = new ProvidersAdapter(transaction);
@@ -106,11 +175,19 @@ public class MainViewActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ProvidersAdapter.OnItemCickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-//                Candidates  candidates = documentSnapshot.toObject(Candidates.class);
-//                String id = documentSnapshot.getId();
-//                Intent toUpdate = new Intent(getContext(), UpdateCandidateActivity.class);
-//                toUpdate.putExtra("ID",id);
-//                startActivity(toUpdate);
+                TopFindProviders topFindProviders = documentSnapshot.toObject(TopFindProviders.class);
+                Requsername = topFindProviders.getUser_name();
+                Reqemail = topFindProviders.getEmail();
+                ReQuestLocation = topFindProviders.getLocation();
+                ReqProfileImage = topFindProviders.getProfile_image();
+                Reqphone = topFindProviders.getPhone();
+                RequestID = topFindProviders.getUser_ID();
+                ReqProfession = topFindProviders.getProfession();
+
+
+                RequestDialog();
+
+
 
             }
         });
@@ -118,7 +195,7 @@ public class MainViewActivity extends AppCompatActivity {
     }
 
     //----Load details---//
-    private String userName,email,Bureau_Name,BureauImage,userImage;
+    private String FuserName,Femail,Flocation,Fprofession,Fnumber,FuserImage;
     private long noOfCandidates;
     private void LoadDetails() {
 
@@ -131,11 +208,16 @@ public class MainViewActivity extends AppCompatActivity {
                 }
                 if (documentSnapshot.exists()){
                     TopFinders topFinders = documentSnapshot.toObject(TopFinders.class);
-                    userImage = topFinders.getProfile_image();
+                    FuserImage = topFinders.getProfile_image();
+                    Femail = topFinders.getEmail();
+                    Flocation = topFinders.getLocation();
+                    Fnumber = topFinders.getPhone();
+                    FuserName = topFinders.getUser_name();
 
-                    if (userImage != null){
+
+                    if (FuserImage != null){
                         Picasso.with(getApplicationContext())
-                                .load(userImage).placeholder(R.drawable.user)
+                                .load(FuserImage).placeholder(R.drawable.user)
                                 .error(R.drawable.user)
                                 .into(profileImage);
                     }
@@ -143,12 +225,53 @@ public class MainViewActivity extends AppCompatActivity {
 
 
 
+                }else {
+
+                    ToastBack(e.getMessage());
                 }
             }
         });
 
     }
     //...end load details
+
+
+    private void SendRequest(){
+        String ID =  FindRequestRef.document().getId();
+
+        HashMap<String,Object> request = new HashMap<>();
+        request.put("User_name",FuserName);
+        request.put("Email",Femail);
+        request.put("Phone",Fnumber);
+        request.put("location",Flocation);
+        request.put("User_ID",RequestID);
+        request.put("Request_ID",ID);
+        request.put("Sender_ID",mAuth.getCurrentUser().getUid());
+        request.put("timestamp", FieldValue.serverTimestamp());
+        request.put("Profile_image",FuserImage);
+
+
+        FindRequestRef.document(ID).set(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                   ToastBack("Request was sent successful");
+                }else {
+                    ToastBack(task.getException().getMessage());
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+    }
 
 
     private Toast backToast;

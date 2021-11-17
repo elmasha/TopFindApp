@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TopFindProvider">
-        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity android:name=".Activities.Service.FinderViewActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.MainViewActivity" />
         <activity android:name=".Activities.Service.FinderProfileActivity" />
         <activity android:name=".Activities.Service.FinderLoginActivity" />

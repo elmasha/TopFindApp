@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.intech.topfindprovider.MainActivity;
+import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
@@ -35,22 +36,30 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
-    private TextView UserName,Email,Phone,Location,logout;
+    private TextView UserName,Email,Phone,Location,logout,Narration;
     private CircleImageView ProfileImage;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference TopFindRef = db.collection("TopFind_Clients");
+    CollectionReference TopFindRef = db.collection("TopFind_Provider");
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LoadDetails();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         mAuth = FirebaseAuth.getInstance();
-        UserName = findViewById(R.id.Tf_name);
-        Email = findViewById(R.id.Tf_email);
-        Phone = findViewById(R.id.Tf_phone);
-        Location = findViewById(R.id.Tf_location);
-        ProfileImage = findViewById(R.id.Tf_userImage);
+        UserName = findViewById(R.id.Tp_name);
+        Email = findViewById(R.id.Tp_email);
+        Phone = findViewById(R.id.Tp_phone);
+        Location = findViewById(R.id.Tp_location);
+        ProfileImage = findViewById(R.id.Tp_userImage);
+        Narration = findViewById(R.id.Tp_narration);
         logout = findViewById(R.id.LogOut);
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +132,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    private String userName,email,phone,location,userImage;
+    private String userName,email,phone,location,userImage,narration;
 
     private void LoadDetails() {
 
@@ -135,17 +144,19 @@ public class ProfileActivity extends AppCompatActivity {
                     return;
                 }
                 if (documentSnapshot.exists()){
-                    TopFinders topFinders = documentSnapshot.toObject(TopFinders.class);
+                    TopFindProviders topFinders = documentSnapshot.toObject(TopFindProviders.class);
                     userImage = topFinders.getProfile_image();
                     userName = topFinders.getUser_name();
                     email = topFinders.getEmail();
                     phone = topFinders.getPhone();
                     location = topFinders.getLocation();
+                    narration = topFinders.getNarration();
 
                     UserName.setText(userName);
                     Email.setText(email);
                     Location.setText(location);
                     Phone.setText(phone);
+                    Narration.setText(narration);
 
                     if (userImage != null){
                         Picasso.with(getApplicationContext())

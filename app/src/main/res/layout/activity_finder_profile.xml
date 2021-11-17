@@ -14,14 +14,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_black"
             android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_black"
+                android:background="@drawable/bg_blue"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -81,7 +80,7 @@
                     app:fab_size="mini"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    app:fab_colorNormal="@color/primary"
+                    app:fab_colorNormal="@color/secondary"
                     app:fab_colorPressed="@color/secondary"
                     />
 
