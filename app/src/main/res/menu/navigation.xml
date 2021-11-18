@@ -8,7 +8,6 @@
         android:iconTint="@color/grey"
         android:title="My profile" />
 
-
     <item
         android:id="@+id/navigation_request"
         android:iconTint="@color/grey"
@@ -16,15 +15,15 @@
         android:title="Requests" />
 
     <item
+        android:id="@+id/navigation_notification"
+        android:iconTint="@color/grey"
+        android:icon="@drawable/ic_notification"
+        android:title="Notifications" />
+
+    <item
         android:id="@+id/navigation_review"
         android:iconTint="@color/grey"
         android:icon="@drawable/ic_reviews"
         android:title="Reviews" />
-
-
-
-
-
-
 
 </menu>

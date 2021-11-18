@@ -22,16 +22,16 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
-                android:layout_gravity="end"
-                android:layout_margin="8dp"
+                android:layout_margin="5dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content">
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ProfilePicture"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:civ_border_color="@color/secondary"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:civ_border_color="@color/primary"
                     app:civ_border_width="3dp"
                     android:src="@drawable/user"
                     />
@@ -47,7 +47,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="20dp"
+            android:layout_margin="8dp"
             android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content">
 
@@ -71,7 +71,7 @@
                         <TextView
                             android:id="@+id/choose_county"
                             android:layout_width="wrap_content"
-                            android:text="Choose category "
+                            android:text="Choose category"
                             android:textSize="17dp"
                             android:drawableRight="@drawable/ic_arrow_drop"
                             android:drawableTint="@color/secondary"

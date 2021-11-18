@@ -36,12 +36,11 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
-    private TextView UserName,Email,Phone,Location,logout,Narration;
+    private TextView UserName,Email,Phone,Location,logout;
     private CircleImageView ProfileImage;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference TopFindRef = db.collection("TopFind_Provider");
-
+    CollectionReference TopFindRef = db.collection("TopFind_Clients");
     @Override
     protected void onStart() {
         super.onStart();
@@ -54,12 +53,11 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         mAuth = FirebaseAuth.getInstance();
-        UserName = findViewById(R.id.Tp_name);
-        Email = findViewById(R.id.Tp_email);
-        Phone = findViewById(R.id.Tp_phone);
-        Location = findViewById(R.id.Tp_location);
-        ProfileImage = findViewById(R.id.Tp_userImage);
-        Narration = findViewById(R.id.Tp_narration);
+        UserName = findViewById(R.id.Tf_name);
+        Email = findViewById(R.id.Tf_email);
+        Phone = findViewById(R.id.Tf_phone);
+        Location = findViewById(R.id.Tf_location);
+        ProfileImage = findViewById(R.id.Tf_userImage);
         logout = findViewById(R.id.LogOut);
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Logout_Alert();
             }
         });
+
     }
 
 
@@ -132,7 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    private String userName,email,phone,location,userImage,narration;
+    private String userName,email,phone,location,userImage;
 
     private void LoadDetails() {
 
@@ -144,19 +143,17 @@ public class ProfileActivity extends AppCompatActivity {
                     return;
                 }
                 if (documentSnapshot.exists()){
-                    TopFindProviders topFinders = documentSnapshot.toObject(TopFindProviders.class);
+                    TopFinders topFinders = documentSnapshot.toObject(TopFinders.class);
                     userImage = topFinders.getProfile_image();
                     userName = topFinders.getUser_name();
                     email = topFinders.getEmail();
                     phone = topFinders.getPhone();
                     location = topFinders.getLocation();
-                    narration = topFinders.getNarration();
 
                     UserName.setText(userName);
                     Email.setText(email);
                     Location.setText(location);
                     Phone.setText(phone);
-                    Narration.setText(narration);
 
                     if (userImage != null){
                         Picasso.with(getApplicationContext())

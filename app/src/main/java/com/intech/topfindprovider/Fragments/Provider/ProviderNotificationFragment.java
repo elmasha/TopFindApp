@@ -1,6 +1,5 @@
 package com.intech.topfindprovider.Fragments.Provider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,23 +19,20 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.intech.topfindprovider.Activities.MainViewActivity;
-import com.intech.topfindprovider.Activities.ProviderRegisterActivity;
-import com.intech.topfindprovider.Activities.ViewRequestActivity;
-import com.intech.topfindprovider.Adapters.ProvidersAdapter;
-import com.intech.topfindprovider.Adapters.RequestAdapter;
-import com.intech.topfindprovider.Models.TopFindProviders;
-import com.intech.topfindprovider.Models.TopFindRequest;
+import com.intech.topfindprovider.Adapters.NotificationAdapter;
+import com.intech.topfindprovider.Models.Notification;
 import com.intech.topfindprovider.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ProviderRequestFragment extends Fragment {
+public class ProviderNotificationFragment extends Fragment {
 View root;
+
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference TopFindRef = db.collection("TopFind_Provider");
+    CollectionReference TopFindRef = db.collection("TopFind_Clients");
+    CollectionReference TopFindProRef = db.collection("TopFind_Provider");
     CollectionReference FindRequestRef = db.collection("TopFind_Request");
 
     private CircleImageView profileImage;
@@ -44,9 +40,11 @@ View root;
     private LinearLayout imageView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private RequestAdapter adapter;
+    private NotificationAdapter adapter;
     private RecyclerView mRecyclerView;
-    public ProviderRequestFragment() {
+
+
+    public ProviderNotificationFragment() {
         // Required empty public constructor
     }
 
@@ -54,24 +52,23 @@ View root;
     @Override
     public void onStart() {
         super.onStart();
-        FetchProduct();
+        FetchNotification();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_provider_request, container, false);
-
-
+        root = inflater.inflate(R.layout.fragment_provider_notification, container, false);
         mAuth = FirebaseAuth.getInstance();
         profileImage = root.findViewById(R.id.ProfilePicture);
-        swipeRefreshLayout = root.findViewById(R.id.SwipeRefresh_request);
-        mRecyclerView = root.findViewById(R.id.recycler_request);
+        swipeRefreshLayout = root.findViewById(R.id.SwipeRefresh_notification);
+        mRecyclerView = root.findViewById(R.id.recycler_notification);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                FetchProduct();
+                FetchNotification();
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -83,20 +80,24 @@ View root;
             }
         });
 
-
+        FetchNotification();
 
         return root;
     }
 
-    private void FetchProduct() {
 
-        Query query = FindRequestRef.whereEqualTo("User_ID",mAuth.getCurrentUser().getUid())
-                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
-        FirestoreRecyclerOptions<TopFindRequest> transaction = new FirestoreRecyclerOptions.Builder<TopFindRequest>()
-                .setQuery(query, TopFindRequest.class)
+
+    private void FetchNotification() {
+        Query query =  TopFindProRef.document(mAuth.getCurrentUser().getUid())
+                .collection("Notifications")
+                .whereEqualTo("to", mAuth.getCurrentUser().getUid())
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(50);
+        FirestoreRecyclerOptions<Notification> transaction = new FirestoreRecyclerOptions.Builder<Notification>()
+                .setQuery(query, Notification.class)
                 .setLifecycleOwner(this)
                 .build();
-        adapter = new RequestAdapter (transaction);
+        adapter = new NotificationAdapter(transaction);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
@@ -104,14 +105,9 @@ View root;
         mRecyclerView.setLayoutManager(LayoutManager);
         mRecyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new RequestAdapter.OnItemCickListener() {
+        adapter.setOnItemClickListener(new NotificationAdapter.OnItemCickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                TopFindProviders topFindProviders = documentSnapshot.toObject(TopFindProviders.class);
-
-                Intent toView = new Intent(getContext(), ViewRequestActivity.class);
-                toView.putExtra("ID",documentSnapshot.getId());
-                startActivity(toView);
 
             }
         });

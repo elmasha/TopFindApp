@@ -24,16 +24,6 @@
 
     </RelativeLayout>
 
-    <!--    <ImageView-->
-    <!--        android:background="@drawable/pp1"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:alpha="0.8"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        />-->
-
-
-
-
 
     <RelativeLayout
         android:gravity="bottom|center"

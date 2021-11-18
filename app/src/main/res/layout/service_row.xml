@@ -14,9 +14,11 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/row_image"
-                android:layout_width="90dp"
+                android:layout_width="80dp"
                 android:layout_margin="5dp"
-                android:layout_height="90dp"
+                android:layout_height="80dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/primary"
                 android:src="@drawable/user" />
 
 
@@ -24,7 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="18dp"
                 android:orientation="vertical">
 
 
@@ -33,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Elamsha Omondi"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:textColor="@color/secondary"
                     android:textSize="19dp"
                     android:textStyle="bold" />
@@ -45,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:text=" "
                     android:textColor="@color/lightGrey"
-                    android:textSize="17dp" />
+                    android:textSize="16dp" />
 
 
                 <TextView
@@ -54,14 +55,30 @@
                     android:layout_height="wrap_content"
                     android:text=" "
                     android:textColor="@color/lightGrey"
-                    android:textSize="17dp" />
+                    android:textSize="16dp" />
+
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:layout_gravity="end"
                     android:layout_height="wrap_content">
+
+
+                    <RatingBar
+                        android:id="@+id/ratingBarShop"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:scaleX=".9"
+                        android:scaleY=".9"
+                        android:rating="4"
+                        android:progressBackgroundTint="@color/grey"
+                        android:stepSize="0.2"
+                        />
+
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -74,6 +91,7 @@
                     <com.getbase.floatingactionbutton.FloatingActionButton
                         android:layout_width="wrap_content"
                         app:fab_size="mini"
+                        android:layout_gravity="end"
                         app:fab_colorNormal="@color/secondary"
                         app:fab_colorPressed="@color/secondary"
                         app:fab_icon="@drawable/ic_arrowforward"

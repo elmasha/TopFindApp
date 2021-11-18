@@ -10,9 +10,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Splash_Activity extends AppCompatActivity {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference TopFindRef = db.collection("TopFind_Clients");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

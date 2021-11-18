@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.intech.topfindprovider.Activities.Service.FinderProfileActivity;
+import com.intech.topfindprovider.Fragments.Provider.ProviderNotificationFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderProfileFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderRequestFragment;
 import com.intech.topfindprovider.Fragments.Provider.ReviewsFragment;
@@ -39,6 +40,9 @@ public class DashboardActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_review:
                     SelectedFragment = new ReviewsFragment();
+                    break;
+                case R.id.navigation_notification:
+                    SelectedFragment = new ProviderNotificationFragment();
                     break;
             }
 

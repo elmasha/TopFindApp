@@ -114,14 +114,7 @@
                     android:orientation="horizontal"
                     >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Username"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="19dp"
-                        android:textStyle="bold" />
+
 
 
                     <TextView
@@ -129,7 +122,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginStart="80dp"
                         android:text="Elmasha Omon"
                         android:textColor="@color/secondary"
                         android:textSize="19dp"
@@ -149,14 +141,6 @@
                     android:orientation="horizontal"
                     >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Email"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="19dp"
-                        android:textStyle="bold" />
 
 
 
@@ -166,7 +150,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginStart="90dp"
                         android:text=" elmashavitran@gmail.com"
                         android:textColor="@color/secondary"
                         android:textSize="17dp" />
@@ -185,14 +168,7 @@
                     android:orientation="horizontal"
                     >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Phone"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="19dp"
-                        android:textStyle="bold" />
+
 
 
 
@@ -202,7 +178,6 @@
                         android:layout_height="wrap_content"
                         android:text="3444565"
                         android:layout_gravity="end"
-                        android:layout_marginStart="90dp"
                         android:textColor="@color/secondary"
                         android:textSize="18dp" />
 
@@ -222,14 +197,6 @@
                     android:orientation="horizontal"
                     >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Loaction"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="19dp"
-                        android:textStyle="bold" />
 
 
 
@@ -239,7 +206,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginStart="90dp"
                         android:text=" Nairobi"
                         android:textColor="@color/secondary"
                         android:textSize="17dp" />

@@ -183,11 +183,7 @@ public class MainViewActivity extends AppCompatActivity {
                 Reqphone = topFindProviders.getPhone();
                 RequestID = topFindProviders.getUser_ID();
                 ReqProfession = topFindProviders.getProfession();
-
-
                 RequestDialog();
-
-
 
             }
         });
@@ -251,17 +247,39 @@ public class MainViewActivity extends AppCompatActivity {
         request.put("Profile_image",FuserImage);
 
 
-        FindRequestRef.document(ID).set(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        HashMap<String ,Object> notify = new HashMap<>();
+        notify.put("title","New Request");
+        notify.put("description","You have new Request from "+FuserName);
+        notify.put("to",RequestID);
+        notify.put("from",mAuth.getCurrentUser().getUid());
+        notify.put("timestamp",FieldValue.serverTimestamp());
+
+        TopFindProRef.document(RequestID).collection("Notifications")
+                .document().set(notify).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
-                   ToastBack("Request was sent successful");
+
+                    FindRequestRef.document(RequestID).set(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                                ToastBack("Request was sent successful");
+                            }else {
+                                ToastBack(task.getException().getMessage());
+                            }
+                        }
+                    });
+
+
                 }else {
                     ToastBack(task.getException().getMessage());
                 }
             }
         });
+
 
 
 
