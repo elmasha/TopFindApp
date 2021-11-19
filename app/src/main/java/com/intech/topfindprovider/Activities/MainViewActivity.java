@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -32,7 +35,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.intech.topfindprovider.Adapters.CategoryAdapter;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
+import com.intech.topfindprovider.Models.Category;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
@@ -51,20 +57,28 @@ public class MainViewActivity extends AppCompatActivity {
     CollectionReference TopFindRef = db.collection("TopFind_Clients");
     CollectionReference TopFindProRef = db.collection("TopFind_Provider");
     CollectionReference FindRequestRef = db.collection("TopFind_Request");
+    CollectionReference CategoryRef = db.collection("Category");
 
     private CircleImageView profileImage;
 
     private LinearLayout imageView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private FrameLayout catLayout;
     private ProvidersAdapter adapter;
-    private RecyclerView mRecyclerView;
+    private CategoryAdapter adapter2;
+    private RecyclerView mRecyclerView,mRecyclerView2;
+    private TextView chooseCat;
+    private String Category = "";
+    private FloatingActionButton SearchCat;
 
+
+    private int dropDownState = 0;
     @Override
     protected void onStart() {
         super.onStart();
         LoadDetails();
-        FetchProduct();
+        FetchProduct(Category);
+        FetchCategory();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +89,44 @@ public class MainViewActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.ProfilePicture);
         swipeRefreshLayout = findViewById(R.id.SwipeRefresh);
         mRecyclerView = findViewById(R.id.recycler_provider);
+        mRecyclerView2 = findViewById(R.id.recycler_category);
+        chooseCat = findViewById(R.id.choose_category);
+        catLayout = findViewById(R.id.FrameCategory);
+        SearchCat = findViewById(R.id.SearchCategory);
+
+
+        SearchCat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Category != null){
+                    FetchProduct(Category);
+                }
+
+            }
+        });
+
+
+        chooseCat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (dropDownState == 0){
+                    catLayout.setVisibility(View.VISIBLE);
+                    dropDownState =1;
+                } else if (dropDownState ==1 ) {
+                    catLayout.setVisibility(View.GONE);
+                    dropDownState =0;
+                }
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                FetchProduct();
+                Category = "";
+                FetchCategory();
+                catLayout.setVisibility(View.GONE);
+                FetchProduct(Category);
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -156,37 +203,107 @@ public class MainViewActivity extends AppCompatActivity {
 
     }
 
-    private void FetchProduct() {
+
+    private void FetchCategory() {
 
         //       Query query = TopFindRef
 //                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
-        FirestoreRecyclerOptions<TopFindProviders> transaction = new FirestoreRecyclerOptions.Builder<TopFindProviders>()
-                .setQuery(TopFindProRef, TopFindProviders.class)
+        FirestoreRecyclerOptions<Category> transaction = new FirestoreRecyclerOptions.Builder<Category>()
+                .setQuery(CategoryRef, Category.class)
                 .setLifecycleOwner(this)
                 .build();
-        adapter = new ProvidersAdapter(transaction);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setNestedScrollingEnabled(false);
+        adapter2 = new CategoryAdapter(transaction);
+        mRecyclerView2.setHasFixedSize(true);
+        mRecyclerView2.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
                 = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(LayoutManager);
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView2.setLayoutManager(LayoutManager);
+        mRecyclerView2.setAdapter(adapter2);
 
-        adapter.setOnItemClickListener(new ProvidersAdapter.OnItemCickListener() {
+        adapter2.setOnItemClickListener(new CategoryAdapter.OnItemCickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                TopFindProviders topFindProviders = documentSnapshot.toObject(TopFindProviders.class);
-                Requsername = topFindProviders.getUser_name();
-                Reqemail = topFindProviders.getEmail();
-                ReQuestLocation = topFindProviders.getLocation();
-                ReqProfileImage = topFindProviders.getProfile_image();
-                Reqphone = topFindProviders.getPhone();
-                RequestID = topFindProviders.getUser_ID();
-                ReqProfession = topFindProviders.getProfession();
-                RequestDialog();
+                Category category = documentSnapshot.toObject(Category.class);
+                Category = category.getCategory();
+                if (Category != null){
+                    FetchProduct(Category);
+                    mRecyclerView.setVisibility(View.GONE);
+                }
 
             }
         });
+
+    }
+
+
+
+
+    private void FetchProduct( String category) {
+        if (category == ""){
+
+                   Query query = TopFindRef
+                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
+            FirestoreRecyclerOptions<TopFindProviders> transaction = new FirestoreRecyclerOptions.Builder<TopFindProviders>()
+                    .setQuery(query, TopFindProviders.class)
+                    .setLifecycleOwner(this)
+                    .build();
+            adapter = new ProvidersAdapter(transaction);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
+            LinearLayoutManager LayoutManager
+                    = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+            mRecyclerView.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(new ProvidersAdapter.OnItemCickListener() {
+                @Override
+                public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                    TopFindProviders topFindProviders = documentSnapshot.toObject(TopFindProviders.class);
+                    Requsername = topFindProviders.getUser_name();
+                    Reqemail = topFindProviders.getEmail();
+                    ReQuestLocation = topFindProviders.getLocation();
+                    ReqProfileImage = topFindProviders.getProfile_image();
+                    Reqphone = topFindProviders.getPhone();
+                    RequestID = topFindProviders.getUser_ID();
+                    ReqProfession = topFindProviders.getProfession();
+                    RequestDialog();
+
+                }
+            });
+
+        }else if (category != null){
+
+            Query query = TopFindRef.whereEqualTo("Profession", category)
+                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
+            FirestoreRecyclerOptions<TopFindProviders> transaction = new FirestoreRecyclerOptions.Builder<TopFindProviders>()
+                    .setQuery(query, TopFindProviders.class)
+                    .setLifecycleOwner(this)
+                    .build();
+            adapter = new ProvidersAdapter(transaction);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
+            LinearLayoutManager LayoutManager
+                    = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+            mRecyclerView.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(new ProvidersAdapter.OnItemCickListener() {
+                @Override
+                public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                    TopFindProviders topFindProviders = documentSnapshot.toObject(TopFindProviders.class);
+                    Requsername = topFindProviders.getUser_name();
+                    Reqemail = topFindProviders.getEmail();
+                    ReQuestLocation = topFindProviders.getLocation();
+                    ReqProfileImage = topFindProviders.getProfile_image();
+                    Reqphone = topFindProviders.getPhone();
+                    RequestID = topFindProviders.getUser_ID();
+                    ReqProfession = topFindProviders.getProfession();
+                    RequestDialog();
+
+                }
+            });
+        }
+
 
     }
 
