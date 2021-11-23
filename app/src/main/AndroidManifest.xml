@@ -17,19 +17,18 @@
             android:required="false" />
 
 
-        <activity android:name=".Activities.ViewRequestActivity"></activity>
+        <activity android:name=".Activities.Provider.ViewRequestActivity"></activity>
         <activity android:name=".Activities.Service.FinderViewActivity" />
-        <activity android:name=".Activities.ProfileActivity" />
-        <activity android:name=".Activities.MainViewActivity" />
+        <activity android:name=".Activities.Service.MainViewActivity" />
         <activity android:name=".Activities.Service.FinderProfileActivity" />
         <activity android:name=".Activities.Service.FinderLoginActivity" />
         <activity android:name=".Activities.Service.FinderRegisterActivity" />
 
 
-        <activity android:name=".Activities.DashboardActivity" />
+        <activity android:name=".Activities.Provider.DashboardActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".Activities.LoginActivity" />
-        <activity android:name=".Activities.ProviderRegisterActivity" />
+        <activity android:name=".Activities.Provider.LoginActivity" />
+        <activity android:name=".Activities.Provider.ProviderRegisterActivity" />
         <activity android:name=".Splash_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.intech.topfindprovider.Activities;
+package com.intech.topfindprovider.Activities.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -179,7 +179,7 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference TopFindRef = db.collection("TopFind_Provider");
-            CollectionReference TopFindCategory = db.collection("TopFind_Category");
+            CollectionReference TopFindCategory = db.collection("Category");
             File newimage = new File(ImageUri.getPath());
             username = Username.getEditText().getText().toString();
             email = Email.getEditText().getText().toString();
@@ -247,8 +247,9 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                     String DOC_id = TopFindCategory.document().getId();
 
                     HashMap<String,Object> storeCategory = new HashMap<>();
-                    storeCategory.put("Category",profession);
-                    storeCategory.put("Category_ID",DOC_id);
+                    storeCategory.put("category",profession);
+                    storeCategory.put("category_ID",DOC_id);
+
 
 
                     TopFindCategory.document(DOC_id).set(storeCategory)

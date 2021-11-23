@@ -1,4 +1,4 @@
-package com.intech.topfindprovider.Activities;
+package com.intech.topfindprovider.Activities.Provider;
 
 import androidx.appcompat.app.AppCompatActivity;
 

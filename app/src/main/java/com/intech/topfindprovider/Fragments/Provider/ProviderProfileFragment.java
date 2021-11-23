@@ -9,6 +9,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +30,12 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.intech.topfindprovider.Activities.Service.MainViewActivity;
+import com.intech.topfindprovider.Adapters.CurrentJobsAdapter;
+import com.intech.topfindprovider.Adapters.ProvidersAdapter;
 import com.intech.topfindprovider.MainActivity;
+import com.intech.topfindprovider.Models.CurrentJobs;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
@@ -45,11 +54,15 @@ private View root;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference TopFindRef = db.collection("TopFind_Provider");
+    CollectionReference CurrentJobRef = db.collection("Current_clients");
+    private RecyclerView recyclerViewJobs;
+    private CurrentJobsAdapter adapter;
 
     @Override
     public void onStart() {
         super.onStart();
         LoadDetails();
+        FetchProduct();
     }
 
     public ProviderProfileFragment() {
@@ -71,6 +84,8 @@ private View root;
         Narration = root.findViewById(R.id.Tp_narration);
         logout = root.findViewById(R.id.LogOut);
         Profession =root.findViewById(R.id.Tp_profession);
+        recyclerViewJobs= root.findViewById(R.id.recycler_current_jobs);
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +97,42 @@ private View root;
         LoadDetails();
         return root;
     }
+
+
+    private void FetchProduct() {
+
+
+            Query query = CurrentJobRef
+                    .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
+            FirestoreRecyclerOptions<CurrentJobs> transaction = new FirestoreRecyclerOptions.Builder<CurrentJobs>()
+                    .setQuery(query, CurrentJobs.class)
+                    .setLifecycleOwner(this)
+                    .build();
+            adapter = new CurrentJobsAdapter(transaction);
+            recyclerViewJobs.setHasFixedSize(true);
+            recyclerViewJobs.setNestedScrollingEnabled(false);
+            LinearLayoutManager LayoutManager
+                    = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerViewJobs.setLayoutManager(LayoutManager);
+            recyclerViewJobs.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(new CurrentJobsAdapter.OnItemCickListener() {
+                @Override
+                public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+
+                }
+            });
+
+
+
+
+
+    }
+
+
+
+
 
     private AlertDialog dialog2;
     public void Logout_Alert() {

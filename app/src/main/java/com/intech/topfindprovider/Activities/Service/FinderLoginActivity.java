@@ -23,8 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.intech.topfindprovider.Activities.MainViewActivity;
-import com.intech.topfindprovider.Activities.ProviderRegisterActivity;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.R;
 

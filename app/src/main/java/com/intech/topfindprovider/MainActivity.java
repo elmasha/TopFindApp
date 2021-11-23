@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.intech.topfindprovider.Activities.LoginActivity;
+import com.intech.topfindprovider.Activities.Provider.LoginActivity;
 import com.intech.topfindprovider.Activities.Service.FinderLoginActivity;
 import com.intech.topfindprovider.Adapters.SlideAdpter;
 

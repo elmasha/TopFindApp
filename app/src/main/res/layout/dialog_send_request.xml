@@ -53,6 +53,8 @@
                 <TextView
                     android:id="@+id/NameRequest"
                     android:layout_width="wrap_content"
+                    android:drawableLeft="@drawable/ic_person"
+                    android:drawableTint="@color/primary"
                     android:layout_height="wrap_content"
                     android:text="Elmasha Omon"
                     android:layout_gravity="center_horizontal"
@@ -64,11 +66,13 @@
                 <TextView
                     android:id="@+id/EmailRequest"
                     android:layout_width="wrap_content"
+                    android:drawableTint="@color/primary"
+                    android:drawableLeft="@drawable/ic_mail"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="elmashavitran@gmail.com"
                     android:textColor="@color/secondary"
-                    android:textSize="15dp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/PhoneRequest"
@@ -85,26 +89,54 @@
                 <TextView
                     android:id="@+id/LocationRequest"
                     android:layout_width="wrap_content"
+                    android:drawableLeft="@drawable/ic_location"
                     android:layout_height="wrap_content"
-                    android:text=" Nairobi"
+                    android:text="Nairobi"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="bold"
-                    android:drawableTint="@color/secondary"
-                    android:textColor="@color/secondary"
-                    android:textSize="16dp" />
-
-                <TextView
-                    android:id="@+id/ProfessionRequest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
                     android:textStyle="bold"
                     android:drawableTint="@color/primary"
                     android:textColor="@color/secondary"
-                    android:textSize="16dp" />
+                    android:textSize="18dp" />
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profession:"
+                        android:drawableTint="@color/secondary"
+                        android:textColor="@color/secondary"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/ProfessionRequest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Teacher"
+                        android:layout_marginStart="5dp"
+                        android:textStyle="bold"
+                        android:drawableTint="@color/primary"
+                        android:textColor="@color/primary"
+                        android:textSize="19dp" />
+
+
+                </LinearLayout>
+
+
+                <EditText
+                    android:id="@+id/input_post_request"
+                    android:layout_width="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:maxLines="10"
+                    android:minLines="5"
+                    android:gravity="top"
+                    android:layout_height="wrap_content"/>
 
 
 

@@ -51,6 +51,12 @@ public class FinderProfileActivity extends AppCompatActivity {
     CollectionReference TopFindRef = db.collection("TopFind_Clients");
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        LoadDetails();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finder_profile);

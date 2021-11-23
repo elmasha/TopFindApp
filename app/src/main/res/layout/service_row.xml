@@ -45,14 +45,7 @@
                     android:textStyle="bold" />
 
 
-                <TextView
-                    android:id="@+id/row_category"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" "
-                    android:textColor="@color/lightGrey"
-                    android:textSize="16dp" />
+
 
 
                 <TextView
@@ -61,7 +54,17 @@
                     android:layout_height="wrap_content"
                     android:text=" "
                     android:layout_gravity="center_horizontal"
-                    android:textColor="@color/lightGrey"
+                    android:textColor="@color/secondary"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/row_category"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:textStyle="bold"
+                    android:textColor="@color/primary"
                     android:textSize="16dp" />
 
 
@@ -94,6 +97,7 @@
                         android:layout_width="wrap_content"
                         app:fab_size="mini"
                         android:layout_gravity="center_horizontal"
+                        android:visibility="gone"
                         app:fab_colorNormal="@color/secondary"
                         app:fab_colorPressed="@color/secondary"
                         app:fab_icon="@drawable/ic_arrowforward"
@@ -103,8 +107,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_margin="8dp"
                         android:textColor="@color/primary"
-                        android:textSize="18dp"
+                        android:textSize="17dp"
+                        android:textStyle="bold"
                         android:text="View profile"/>
 
                 </LinearLayout>

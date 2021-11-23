@@ -36,7 +36,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.intech.topfindprovider.Activities.DashboardActivity;
+import com.intech.topfindprovider.Activities.Provider.DashboardActivity;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.R;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -56,6 +56,8 @@ import static com.theartofdev.edmodo.cropper.CropImage.CROP_IMAGE_ACTIVITY_REQUE
 public class FinderRegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference TopFindRef = db.collection("TopFind_Clients");
 
     private FloatingActionButton add_profile;
     private CircleImageView imageView;
@@ -160,6 +162,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
                             Store_Image_and_Details();
                         }else {
                             ToastBack(task.getException().getMessage());
+                            progressDialog.dismiss();
                         }
                     }
                 });
@@ -191,8 +194,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
 
         if (ImageUri != null){
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference TopFindRef = db.collection("TopFind_Clients");
+
             File newimage = new File(ImageUri.getPath());
             username = Username.getEditText().getText().toString();
             email = Email.getEditText().getText().toString();
@@ -294,7 +296,6 @@ public class FinderRegisterActivity extends AppCompatActivity {
     private Toast backToast;
     private void ToastBack(String message){
 
-
         backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         View view = backToast.getView();
 
@@ -329,7 +330,6 @@ public class FinderRegisterActivity extends AppCompatActivity {
         rpassword = RPassword.getEditText().getText().toString();
         phone = Phone.getEditText().getText().toString();
         location = Location.getEditText().getText().toString();
-
 
 
         if (username.isEmpty()){

@@ -13,49 +13,44 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.intech.topfindprovider.Models.TopFindProviders;
+import com.intech.topfindprovider.Models.CurrentJobs;
 import com.intech.topfindprovider.R;
+import com.intech.topfindprovider.TimeAgo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProvidersAdapter2 extends FirestoreRecyclerAdapter<TopFindProviders, ProvidersAdapter2.ProviderViewHolder> {
+public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, CurrentJobsAdapter.CurrentJobsViewHolder> {
 
     private OnItemCickListener listener;
-    public List<TopFindProviders> candidatesList;
+    public List<CurrentJobs> candidatesList;
     public Context context;
 
 
-    public ProvidersAdapter2(@NonNull FirestoreRecyclerOptions<TopFindProviders> options) {
+    public CurrentJobsAdapter(@NonNull FirestoreRecyclerOptions<CurrentJobs> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ProviderViewHolder holder, int position, @NonNull TopFindProviders model) {
+    protected void onBindViewHolder(@NonNull CurrentJobsViewHolder holder, int position, @NonNull CurrentJobs model) {
         holder.Name.setText(model.getUser_name());
-        holder.category.setText(model.getProfession());
         holder.location.setText(model.getLocation());
-//        holder.mobile.setText(model.getMobile_no());
-//        holder.age.setText(model.getAge()+" yrs");
-//        holder.status.setText(model.getStatus());
 
         if(context != null | model.getProfile_image() != null) {
-            Picasso.with(context).load(model.getProfile_image()).placeholder(R.drawable.load).error(R.drawable.errorimage).into(holder.profile);
+            Picasso.with(context).load(model.getProfile_image())
+                    .placeholder(R.drawable.load).error(R.drawable.errorimage).into(holder.profile);
         }
-
-
-
 
     }
 
     @NonNull
     @Override
-    public ProviderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_row,parent,false);
+    public CurrentJobsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.current_row,parent,false);
         this.context = parent.getContext();
-        return new ProviderViewHolder(v);
+        return new CurrentJobsViewHolder(v);
     }
 
 
@@ -64,21 +59,17 @@ public class ProvidersAdapter2 extends FirestoreRecyclerAdapter<TopFindProviders
      getSnapshots().getSnapshot(position).getReference().delete();
     }
 
-    class ProviderViewHolder extends RecyclerView.ViewHolder{
-       private TextView Name, category, location,mobile,age,status;
+    class CurrentJobsViewHolder extends RecyclerView.ViewHolder{
+       private TextView Name, location;
        private CircleImageView profile;
        private View view;
 
-        public ProviderViewHolder(@NonNull View itemView) {
+        public CurrentJobsViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            Name = itemView.findViewById(R.id.row_username);
-
-            category = itemView.findViewById(R.id.row_category);
-            profile = itemView.findViewById(R.id.row_image);
-            location = itemView.findViewById(R.id.row_location);
-//            age = itemView.findViewById(R.id.row_age);
-//            status = itemView.findViewById(R.id.row_status);
+            Name = itemView.findViewById(R.id.current_row_username);
+            profile = itemView.findViewById(R.id.current_row_image);
+            location = itemView.findViewById(R.id.current_row_location);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
