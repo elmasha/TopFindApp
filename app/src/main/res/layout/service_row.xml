@@ -41,8 +41,22 @@
                     android:layout_height="wrap_content"
                     android:text="Elamsha Omondi"
                     android:textColor="@color/secondary"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textSize="17dp"
+                     />
+                <RatingBar
+                    android:id="@+id/ratingBarShop"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:scaleX=".9"
+                    android:scaleY=".9"
+                    android:rating="4"
+                    android:progressBackgroundTint="@color/grey"
+                    android:stepSize="0.2"
+                    />
+
 
 
 
@@ -76,19 +90,6 @@
                     android:layout_height="wrap_content">
 
 
-                    <RatingBar
-                        android:id="@+id/ratingBarShop"
-                        style="@style/Widget.AppCompat.RatingBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="wrap_content"
-                        android:numStars="5"
-                        android:scaleX=".9"
-                        android:scaleY=".9"
-                        android:rating="4"
-                        android:progressBackgroundTint="@color/grey"
-                        android:stepSize="0.2"
-                        />
 
 
 

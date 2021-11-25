@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private  int mCurrentPage;
     private RelativeLayout relativeLayout;
     private LinearLayout linearLayout;
-    private Button get_started,enableLocation;
+    private Button get_started;
 
 
     Button button;

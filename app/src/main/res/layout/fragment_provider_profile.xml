@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
 
@@ -134,10 +134,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="10dp"
             android:background="@drawable/bg_white"
             android:orientation="vertical">
+
+
 
 
 
@@ -172,14 +174,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:layout_height="wrap_content">
 
                     <ImageView
@@ -196,6 +198,29 @@
                         android:textStyle="bold"
                         android:textColor="@color/secondary"
                         android:textSize="18dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:src="@drawable/increase"
+                        android:layout_height="35dp"/>
+                    <TextView
+                        android:id="@+id/Tp_experince"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_marginStart="14dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/secondary"
+                        android:textSize="20dp" />
 
                 </LinearLayout>
 
@@ -268,12 +293,12 @@
                     <FrameLayout
                         android:id="@+id/FrameProfile"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp">
+                        android:layout_height="150dp">
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recycler_current_jobs"
                             android:padding="5dp"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp">
+                            android:layout_height="match_parent">
 
                         </androidx.recyclerview.widget.RecyclerView>
 

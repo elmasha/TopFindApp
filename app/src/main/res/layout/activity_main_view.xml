@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/relative"
     android:layout_height="match_parent"
     tools:context=".Activities.Service.MainViewActivity">
 
@@ -18,25 +19,44 @@
             android:background="@drawable/bg_blue"
             android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
-
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ProfilePicture"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/user"
-                    app:civ_border_color="@color/primary"
-                    app:civ_border_width="3dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
 
 
-            </LinearLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ProfilePicture"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/user"
+                        app:civ_border_color="@color/primary"
+                        app:civ_border_width="3dp" />
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/Notification"
+                    android:layout_width="28dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/notification"
+                    android:layout_height="28dp"/>
+
+
+
+            </RelativeLayout>
+
+
+
 
 
         </LinearLayout>
@@ -156,8 +176,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:text="Post job"
+            android:background="@drawable/btn_round_blue"
             android:textColor="@color/primary"
             android:textStyle="bold"
+            android:padding="8dp"
             android:layout_gravity="center_horizontal"
             android:textSize="18dp"
             android:layout_height="wrap_content"/>
@@ -165,6 +187,15 @@
 
 
     </LinearLayout>
+
+
+
+    <FrameLayout
+        android:id="@+id/Frame_main"
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 
 </RelativeLayout>

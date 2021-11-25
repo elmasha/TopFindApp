@@ -37,6 +37,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
     protected void onBindViewHolder(@NonNull CurrentJobsViewHolder holder, int position, @NonNull CurrentJobs model) {
         holder.Name.setText(model.getUser_name());
         holder.location.setText(model.getLocation());
+        holder.category.setText(model.getCategory());
 
         if(context != null | model.getProfile_image() != null) {
             Picasso.with(context).load(model.getProfile_image())
@@ -60,7 +61,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
     }
 
     class CurrentJobsViewHolder extends RecyclerView.ViewHolder{
-       private TextView Name, location;
+       private TextView Name, location,category;
        private CircleImageView profile;
        private View view;
 
@@ -70,6 +71,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
             Name = itemView.findViewById(R.id.current_row_username);
             profile = itemView.findViewById(R.id.current_row_image);
             location = itemView.findViewById(R.id.current_row_location);
+            category = itemView.findViewById(R.id.current_row_category);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

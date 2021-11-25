@@ -21,7 +21,6 @@
 
 
 
-
     </RelativeLayout>
 
 
@@ -128,8 +127,6 @@
                     android:background="@drawable/btn_round_blue"
                     android:textColor="@color/white"
                      />
-
-
 
 
             </LinearLayout>

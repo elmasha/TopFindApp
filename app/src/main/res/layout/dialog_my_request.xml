@@ -23,9 +23,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/TpView_userImage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_margin="20dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="30dp"
                 android:layout_gravity="center"
                 android:src="@drawable/user"
                 app:civ_border_color="@color/primary"
@@ -37,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 app:fab_icon="@drawable/ic_phone"
+                android:layout_margin="10dp"
                 app:fab_colorNormal="@color/secondary"
                 app:fab_colorPressed="@color/primary"
                 />
@@ -59,9 +60,11 @@
                     android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/TpView_name"
+                        android:layout_margin="4dp"
                         android:layout_width="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_person"
+                        android:drawableTint="@color/primary"
                         android:text="Elmasha Omond"
                         android:textStyle="bold"
                         android:textColor="@color/secondary"
@@ -72,6 +75,9 @@
                     <TextView
                         android:id="@+id/TpView_email"
                         android:layout_width="wrap_content"
+                        android:drawableTint="@color/primary"
+                        android:layout_margin="4dp"
+                        android:drawableLeft="@drawable/ic_mail"
                         android:layout_height="wrap_content"
                         android:text="elmashavitran@gmail.com"
                         android:textColor="@color/secondary"
@@ -84,7 +90,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="073444565"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="4dp"
+                        android:drawableLeft="@drawable/ic_phone_24"
+                        android:drawableTint="@color/primary"
                         android:textColor="@color/secondary"
                         android:textSize="17dp" />
 
@@ -104,11 +112,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" Nairobi"
-                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="8dp"
                         android:textStyle="bold"
                         android:drawableLeft="@drawable/ic_location"
-                        android:drawableTint="@color/secondary"
+                        android:drawableTint="@color/primary"
                         android:textColor="@color/secondary"
                         android:textSize="17dp" />
 

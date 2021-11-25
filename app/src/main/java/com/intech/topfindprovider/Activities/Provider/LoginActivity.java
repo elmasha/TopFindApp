@@ -12,11 +12,14 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email,password;
     private TextInputLayout InputEmail,InputPassword;
     private Button LoginBtn;
+    private LinearLayout relativeLayout;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference TopFindRef = db.collection("TopFind_Provider");
@@ -48,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         InputEmail = findViewById(R.id.PRemail_login);
         InputPassword = findViewById(R.id.PRpassword_login);
         LoginBtn = findViewById(R.id.PRBtn_login);
+        relativeLayout = findViewById(R.id.linearLayout);
 
         LoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent logout = new Intent(getApplicationContext(), MainActivity.class);
-                logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logout);
             }
         });
@@ -77,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent logout = new Intent(getApplicationContext(), ProviderRegisterActivity.class);
-                logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logout);
             }
         });
@@ -160,20 +165,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private Toast backToast;
-    private void ToastBack(String message){
-
-
-        backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
-        backToast.show();
+    private Snackbar snackbar;
+    private void ToastBack(String msg){
+        snackbar = Snackbar.make(relativeLayout, msg, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
 
@@ -181,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent logout = new Intent(getApplicationContext(), MainActivity.class);
-        logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(logout);
     }
 }

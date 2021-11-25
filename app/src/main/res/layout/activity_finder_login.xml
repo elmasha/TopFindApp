@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+        android:id="@+id/linearLogin"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -156,7 +157,7 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/ToRegister"
+                android:id="@+id/PRToRegister"
                 android:layout_width="wrap_content"
                 android:text="Register"
                 android:textColor="@color/secondary"

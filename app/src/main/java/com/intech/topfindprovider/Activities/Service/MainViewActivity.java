@@ -17,8 +17,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +41,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.intech.topfindprovider.Adapters.CategoryAdapter;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
+import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
 import com.intech.topfindprovider.Models.Category;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
@@ -69,9 +73,12 @@ public class MainViewActivity extends AppCompatActivity {
     private TextView chooseCat,SearchCategory;
     private String Category = "";
     private FloatingActionButton SearchCat,postJob;
+    private RelativeLayout relativeLayout;
+    private ImageView imageViewNotify;
 
 
     private int dropDownState = 0;
+    private int NotifyState = 0;
     @Override
     protected void onStart() {
         super.onStart();
@@ -79,6 +86,8 @@ public class MainViewActivity extends AppCompatActivity {
         FetchCategory();
         LoadDetails();
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +103,29 @@ public class MainViewActivity extends AppCompatActivity {
         SearchCat = findViewById(R.id.SearchCategory);
         SearchCategory = findViewById(R.id.searchCat);
         linearLayoutSearch = findViewById(R.id.SearchLayout);
+        relativeLayout = findViewById(R.id.relative);
+        imageViewNotify = findViewById(R.id.Notification);
+
+
+        imageViewNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (NotifyState == 0){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.Frame_main,
+                            new FinderNotificationFragment()).commit();
+                    NotifyState = 1;
+                }else if (NotifyState == 1){
+                    NotifyState = 0;
+                    if(getSupportFragmentManager().findFragmentById(R.id.Frame_main) != null) {
+                        getSupportFragmentManager()
+                                .beginTransaction().
+                                remove(getSupportFragmentManager().findFragmentById(R.id.Frame_main)).commit();
+                    }
+
+                }
+
+            }
+        });
 
         postJob = findViewById(R.id.PostJob);
 
@@ -370,8 +402,6 @@ public class MainViewActivity extends AppCompatActivity {
     }
     private void FetchCategory() {
 
-        //       Query query = TopFindRef
-//                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
         FirestoreRecyclerOptions<Category> transaction = new FirestoreRecyclerOptions.Builder<Category>()
                 .setQuery(CategoryRef, Category.class)
                 .setLifecycleOwner(this)
@@ -403,8 +433,6 @@ public class MainViewActivity extends AppCompatActivity {
 
 
     private void FetchProduct() {
-
-
         if (Category.equals("")){
 
             Query query = TopFindProRef
@@ -518,6 +546,7 @@ public class MainViewActivity extends AppCompatActivity {
     //...end load details
 
     String IID;
+    private Snackbar snackbar;
     private void SendRequest(String id){
         String ID =  FindRequestRef.document().getId();
 
@@ -535,6 +564,51 @@ public class MainViewActivity extends AppCompatActivity {
 
 
 
+        FindRequestRef.document(mAuth.getCurrentUser().getUid()).set(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                    if (dialog_postJob != null)dialog_postJob.dismiss();
+
+                    snackbar = Snackbar.make(relativeLayout, "Request sent successful", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("NOTIFY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Notify(id);
+                        }
+                    });
+                    snackbar.show();
+
+
+
+
+                }else {
+                   // ToastBack(task.getException().getMessage());
+                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                    if (dialog_postJob != null)dialog_postJob.dismiss();
+                }
+            }
+        });
+
+
+
+
+    }
+
+
+    private void SnackBack(String msg){
+        snackbar = Snackbar.make(relativeLayout, msg, Snackbar.LENGTH_LONG);
+        snackbar.setAction("Close", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        snackbar.show();
+    }
+
+    private void Notify(String id){
         HashMap<String ,Object> notify = new HashMap<>();
         notify.put("title","New Request");
         notify.put("description","You have new Request from "+FuserName);
@@ -547,23 +621,7 @@ public class MainViewActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-
-                    FindRequestRef.document(ID).set(request).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
-                                if (dialog_postJob != null)dialog_postJob.dismiss();
-                                ToastBack("Request was sent successful");
-                            }else {
-                                ToastBack(task.getException().getMessage());
-                                if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
-                                if (dialog_postJob != null)dialog_postJob.dismiss();
-                            }
-                        }
-                    });
-
-
+                    snackbar.dismiss();
                 }else {
                     ToastBack(task.getException().getMessage());
                     if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
@@ -573,30 +631,12 @@ public class MainViewActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-
-
-
     }
 
 
     private Toast backToast;
     private void ToastBack(String message){
-
-
         backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
         backToast.show();
     }
     @Override
@@ -613,6 +653,11 @@ public class MainViewActivity extends AppCompatActivity {
         } else {
 
             ToastBack("Double tap to exit");
+            if(getSupportFragmentManager().findFragmentById(R.id.Frame_main) != null) {
+                getSupportFragmentManager()
+                        .beginTransaction().
+                        remove(getSupportFragmentManager().findFragmentById(R.id.Frame_main)).commit();
+            }
 
         }
         backPressedTime = System.currentTimeMillis();

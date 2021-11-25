@@ -12,11 +12,13 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +37,7 @@ public class FinderLoginActivity extends AppCompatActivity {
     private String email,password;
     private TextInputLayout InputEmail,InputPassword;
     private Button LoginBtn;
+    private LinearLayout linearLayout;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference TopFindRef = db.collection("TopFind_Clients");
@@ -48,6 +51,7 @@ public class FinderLoginActivity extends AppCompatActivity {
         InputEmail = findViewById(R.id.email_login);
         InputPassword = findViewById(R.id.password_login);
         LoginBtn = findViewById(R.id.Btn_login);
+        linearLayout = findViewById(R.id.linearLogin);
 
         LoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,16 +72,16 @@ public class FinderLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent logout = new Intent(getApplicationContext(), MainActivity.class);
-                logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logout);
             }
         });
-        toRegister = findViewById(R.id.ToRegister);
+        toRegister = findViewById(R.id.PRToRegister);
         toRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent logout = new Intent(getApplicationContext(), FinderRegisterActivity.class);
-                logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logout);
             }
         });
@@ -111,8 +115,6 @@ public class FinderLoginActivity extends AppCompatActivity {
 
 
     private void UpdateDeviceToken(String uid) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference TopFindRef = db.collection("TopFind_Clients");
 
         String token_Id = FirebaseInstanceId.getInstance().getToken();
 
@@ -122,7 +124,7 @@ public class FinderLoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    ToastBack("Authentication Succeeded ");
+                   ToastBack("Authentication Succeeded ");
                     progressDialog.dismiss();
                     startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
 
@@ -160,27 +162,18 @@ public class FinderLoginActivity extends AppCompatActivity {
 
     }
 
-    private Toast backToast;
-    private void ToastBack(String message){
-
-
-        backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
-        backToast.show();
+    private Snackbar snackbar;
+    private void ToastBack(String msg){
+        snackbar = Snackbar.make(linearLayout, msg, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent logout = new Intent(getApplicationContext(), MainActivity.class);
-        logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(logout);
 
     }

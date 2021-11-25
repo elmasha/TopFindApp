@@ -2,6 +2,8 @@ package com.intech.topfindprovider.Activities.Service;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,10 +32,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.intech.topfindprovider.Adapters.CurrentJobsAdapter;
 import com.intech.topfindprovider.MainActivity;
+import com.intech.topfindprovider.Models.CurrentJobs;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
@@ -49,10 +55,15 @@ public class FinderProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference TopFindRef = db.collection("TopFind_Clients");
+    CollectionReference CurrentJobRef = db.collection("Current_clients");
+    private RecyclerView recyclerViewJobs;
+    private CurrentJobsAdapter adapter;
+
 
     @Override
     protected void onStart() {
         super.onStart();
+        FetchProduct();
         LoadDetails();
     }
 
@@ -67,6 +78,8 @@ public class FinderProfileActivity extends AppCompatActivity {
         Location = findViewById(R.id.Tf_location);
         ProfileImage = findViewById(R.id.Tf_userImage);
         logout = findViewById(R.id.LogOut);
+        recyclerViewJobs= findViewById(R.id.recycler_active_jobs);
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +89,39 @@ public class FinderProfileActivity extends AppCompatActivity {
         });
     }
 
+
+    private void FetchProduct() {
+
+        Query query =
+                TopFindRef.document(mAuth.getCurrentUser().getUid())
+                        .collection("Current_workers")
+                .whereEqualTo("job_ID",mAuth.getCurrentUser().getUid())
+                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
+        FirestoreRecyclerOptions<CurrentJobs> transaction = new FirestoreRecyclerOptions.Builder<CurrentJobs>()
+                .setQuery(query, CurrentJobs.class)
+                .setLifecycleOwner(this)
+                .build();
+        adapter = new CurrentJobsAdapter(transaction);
+        recyclerViewJobs.setHasFixedSize(true);
+        recyclerViewJobs.setNestedScrollingEnabled(false);
+        LinearLayoutManager LayoutManager
+                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewJobs.setLayoutManager(LayoutManager);
+        recyclerViewJobs.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new CurrentJobsAdapter.OnItemCickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+
+            }
+        });
+
+
+
+
+
+    }
 
     private AlertDialog dialog2;
     public void Logout_Alert() {
@@ -120,7 +166,7 @@ public class FinderProfileActivity extends AppCompatActivity {
 
                     mAuth.signOut();
                     Intent logout = new Intent(getApplicationContext(), MainActivity.class);
-                    logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(logout);
                     dialog2.dismiss();
 

@@ -15,7 +15,5 @@ public class ViewRequestActivity extends AppCompatActivity {
     if (getIntent() != null){
         ID = getIntent().getStringExtra("ID");
     }
-
-
     }
 }

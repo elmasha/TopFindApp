@@ -69,17 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private Toast backToast;
     private void ToastBack(String message){
-
-
         backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
         backToast.show();
     }
     @Override

@@ -152,7 +152,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:inputType="phone"
-                    android:drawableRight="@drawable/ic_phone"
+                    android:drawableRight="@drawable/ic_phone_24"
                     android:layout_height="wrap_content"
                     android:hint="Enter phone No. *"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -205,8 +205,6 @@
                     android:layout_height="wrap_content"
                     android:hint="Narration*"/>
             </com.google.android.material.textfield.TextInputLayout>
-
-
 
 
 

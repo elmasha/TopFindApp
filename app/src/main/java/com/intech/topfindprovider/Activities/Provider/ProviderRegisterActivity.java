@@ -69,6 +69,10 @@ public class ProviderRegisterActivity extends AppCompatActivity {
     private Bitmap compressedImageBitmap;
     String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE};
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference TopFindRef = db.collection("TopFind_Provider");
+    CollectionReference TopFindCategory = db.collection("Category");
+
     private TextView toLogin,toMain;
     private TextInputLayout Username,Email,Profession,Narration,Password,RPassword,Phone,Location;
     private Button Btn_register;
@@ -177,9 +181,6 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
         if (ImageUri != null){
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference TopFindRef = db.collection("TopFind_Provider");
-            CollectionReference TopFindCategory = db.collection("Category");
             File newimage = new File(ImageUri.getPath());
             username = Username.getEditText().getText().toString();
             email = Email.getEditText().getText().toString();
@@ -258,13 +259,13 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
 
-                                TopFindRef.document(mAuth.getCurrentUser().getUid()).set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                TopFindRef.document(mAuth.getCurrentUser().getUid())
+                                        .set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
 
                                         if (task.isSuccessful()){
                                             Intent logout = new Intent(getApplicationContext(), DashboardActivity.class);
-                                            logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(logout);
                                         }else {
 
@@ -407,17 +408,7 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
     private Toast backToast;
     private void ToastBack(String message){
-
-
         backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
         backToast.show();
     }
 

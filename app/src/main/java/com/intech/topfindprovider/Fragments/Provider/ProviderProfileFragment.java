@@ -49,7 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProviderProfileFragment extends Fragment {
 private View root;
-    private TextView UserName,Email,Phone,Location,logout,Narration,Profession;
+    private TextView UserName,Email,Phone,Location,logout,Narration,Profession,Experience;
     private CircleImageView ProfileImage;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -84,6 +84,7 @@ private View root;
         Narration = root.findViewById(R.id.Tp_narration);
         logout = root.findViewById(R.id.LogOut);
         Profession =root.findViewById(R.id.Tp_profession);
+        Experience = root.findViewById(R.id.Tp_experince);
         recyclerViewJobs= root.findViewById(R.id.recycler_current_jobs);
 
 
@@ -101,8 +102,7 @@ private View root;
 
     private void FetchProduct() {
 
-
-            Query query = CurrentJobRef
+            Query query = CurrentJobRef.whereEqualTo("User_ID",mAuth.getCurrentUser().getUid())
                     .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
             FirestoreRecyclerOptions<CurrentJobs> transaction = new FirestoreRecyclerOptions.Builder<CurrentJobs>()
                     .setQuery(query, CurrentJobs.class)
@@ -126,10 +126,7 @@ private View root;
 
 
 
-
-
     }
-
 
 
 
@@ -177,10 +174,9 @@ private View root;
 
                     mAuth.signOut();
                     Intent logout = new Intent(getContext(), MainActivity.class);
-                    logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(logout);
                     dialog2.dismiss();
-
 
                 }else {
 
@@ -194,7 +190,7 @@ private View root;
     }
 
 
-    private String userName,email,phone,location,userImage,narration,profession;
+    private String userName,email,phone,location,userImage,narration,profession,experience;
 
     private void LoadDetails() {
 
@@ -214,6 +210,7 @@ private View root;
                     location = topFinders.getLocation();
                     narration = topFinders.getNarration();
                     profession = topFinders.getProfession();
+                    experience = topFinders.getExperience();
 
 
                     UserName.setText(userName);
@@ -222,6 +219,7 @@ private View root;
                     Phone.setText(phone);
                     Narration.setText(narration);
                     Profession.setText(profession);
+                    Experience.setText(experience);
 
                     if (userImage != null){
                         Picasso.with(getContext())
@@ -246,14 +244,7 @@ private View root;
 
 
         backToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
 
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
         backToast.show();
     }
 }

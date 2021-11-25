@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +38,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.intech.topfindprovider.Activities.Provider.DashboardActivity;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.R;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -59,7 +60,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference TopFindRef = db.collection("TopFind_Clients");
 
-    private FloatingActionButton add_profile;
+    private FloatingActionButton add_profile_finder;
     private CircleImageView imageView;
 
     private Uri ImageUri;
@@ -72,31 +73,33 @@ public class FinderRegisterActivity extends AppCompatActivity {
 
     private TextView toLogin,toMain;
     private TextInputLayout Username,Email,Password,RPassword,Phone,Location;
-    private Button Btn_register;
+    private Button Btn_register2;
     private String username,email,password,rpassword,phone,location;
+    private LinearLayout linearLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finder_register);
 
         mAuth = FirebaseAuth.getInstance();
-
-        toLogin = findViewById(R.id.ToLogin);
-        Username = findViewById(R.id.first_name);
-        Email = findViewById(R.id.email_address);
-        Password = findViewById(R.id.password);
-        RPassword = findViewById(R.id.retry_password);
-        Phone = findViewById(R.id.phone_no);
-        Location = findViewById(R.id.location);
-        Btn_register = findViewById(R.id.Btn_register);
-        imageView = findViewById(R.id.profileImage);
-        add_profile = findViewById(R.id.add_Photo);
-
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        toLogin = findViewById(R.id.PToLogin);
+        Username = findViewById(R.id.Pfirst_name);
+        Email = findViewById(R.id.Pemail_address);
+        Password = findViewById(R.id.Ppassword);
+        RPassword = findViewById(R.id.Pretry_password);
+        Phone = findViewById(R.id.Pphone_no);
+        Location = findViewById(R.id.Plocation);
+        Btn_register2 = findViewById(R.id.FBtn_register);
+        imageView = findViewById(R.id.PprofileImage);
+        add_profile_finder = findViewById(R.id.Padd_Photo);
+        linearLayout = findViewById(R.id.finderLinear);
 
 
-        add_profile.setOnClickListener(new View.OnClickListener() {
+
+
+        add_profile_finder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!hasPermissions(getApplicationContext(), PERMISSIONS)){
@@ -110,11 +113,9 @@ public class FinderRegisterActivity extends AppCompatActivity {
             }
         });
 
-        Btn_register.setOnClickListener(new View.OnClickListener() {
+        Btn_register2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if (!validation()){
 
                 }else {
@@ -125,7 +126,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
             }
         });
 
-        toMain = findViewById(R.id.BackToMain);
+        toMain = findViewById(R.id.PBackToMain);
         toMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +160,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Store_Image_and_Details();
+                            Store_Image_and_Details(mAuth.getCurrentUser().getUid());
                         }else {
                             ToastBack(task.getException().getMessage());
                             progressDialog.dismiss();
@@ -189,10 +190,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
     }
 
     private ProgressDialog progressDialog;
-    private void Store_Image_and_Details() {
-
-
-        if (ImageUri != null){
+    private void Store_Image_and_Details(String UID) {
 
 
             File newimage = new File(ImageUri.getPath());
@@ -202,8 +200,6 @@ public class FinderRegisterActivity extends AppCompatActivity {
             rpassword = RPassword.getEditText().getText().toString();
             phone = Phone.getEditText().getText().toString();
             location = Location.getEditText().getText().toString();
-
-
 
             try {
                 Compressor compressor = new Compressor(this);
@@ -221,7 +217,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
             final byte[] data = baos.toByteArray();
 
 
-            final StorageReference ref = storageReference.child("Users/thumbs" + UUID.randomUUID().toString());
+            final StorageReference ref = storageReference.child("UserImage/thumbs" + UUID.randomUUID().toString());
             uploadTask = ref.putBytes(data);
 
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -247,18 +243,20 @@ public class FinderRegisterActivity extends AppCompatActivity {
                     store.put("Phone",phone);
                     store.put("location",location);
                     store.put("device_token",token_Id);
-                    store.put("User_ID",mAuth.getCurrentUser().getUid());
+                    store.put("User_ID",UID);
                     store.put("Profile_image",profileImage);
 
 
-                    TopFindRef.document(mAuth.getCurrentUser().getUid()).set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    TopFindRef.document(UID).set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
 
                             if (task.isSuccessful()){
-                                Intent logout = new Intent(getApplicationContext(), DashboardActivity.class);
-                                logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                progressDialog.dismiss();
+                                Intent logout = new Intent(getApplicationContext(), MainViewActivity.class);
                                 startActivity(logout);
+
                             }else {
 
                                 ToastBack("Registration failed try Again.");
@@ -276,16 +274,11 @@ public class FinderRegisterActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
 
                     ToastBack(e.getMessage());
+                    progressDialog.dismiss();
 
                 }
             });
 
-        }else {
-
-            ToastBack("No image selected");
-
-        }
-
 
 
 
@@ -293,20 +286,12 @@ public class FinderRegisterActivity extends AppCompatActivity {
 
 
 
-    private Toast backToast;
-    private void ToastBack(String message){
-
-        backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
-        backToast.show();
+    private Snackbar snackbar;
+    private void ToastBack(String msg){
+        snackbar = Snackbar.make(linearLayout, msg, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
+
 
     public static boolean hasPermissions(Context context, String... permissions) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
@@ -350,7 +335,11 @@ public class FinderRegisterActivity extends AppCompatActivity {
         }else if (!password.equals(rpassword)){
             RPassword.setError("Password do no match");
             return false;
-        }else if (phone.isEmpty()){
+        }else if (ImageUri==null){
+            ToastBack("Provide profile photo");
+            return false;
+        }
+        else if (phone.isEmpty()){
             Phone.setError("Provide your phone number.");
             return false;
         }else if (location.isEmpty()){

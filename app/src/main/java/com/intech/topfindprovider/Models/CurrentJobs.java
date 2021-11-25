@@ -3,15 +3,15 @@ package com.intech.topfindprovider.Models;
 import java.util.Date;
 
 public class CurrentJobs {
-  private String User_name,Email,Phone,location,User_ID,Profile_image,job_ID;
+  private String User_name,Email,Phone,location,User_ID,Profile_image,job_ID,Category;
   private Date timestamp;
 
     public CurrentJobs() {
         //...Empty
     }
 
-    public CurrentJobs(String user_name, String email, String phone, String location
-            , String user_ID, String profile_image, String job_ID, Date timestamp) {
+    public CurrentJobs(String user_name, String email, String phone,
+                       String location, String user_ID, String profile_image, String job_ID, String category, Date timestamp) {
         User_name = user_name;
         Email = email;
         Phone = phone;
@@ -19,9 +19,13 @@ public class CurrentJobs {
         User_ID = user_ID;
         Profile_image = profile_image;
         this.job_ID = job_ID;
+        Category = category;
         this.timestamp = timestamp;
     }
 
+    public String getCategory() {
+        return Category;
+    }
 
     public String getUser_name() {
         return User_name;

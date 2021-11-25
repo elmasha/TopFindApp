@@ -29,8 +29,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.intech.topfindprovider.Activities.Provider.ViewRequestActivity;
 import com.intech.topfindprovider.Adapters.RequestAdapter;
@@ -48,7 +50,8 @@ public class ProviderRequestFragment extends Fragment {
 View root;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference TopFindRef = db.collection("TopFind_Provider");
+    CollectionReference TopFindRef = db.collection("TopFind_Clients");
+    CollectionReference TopFindProviderRef = db.collection("TopFind_Provider");
     CollectionReference FindRequestRef = db.collection("TopFind_Request");
     CollectionReference CurrentJobRef = db.collection("Current_clients");
 
@@ -68,6 +71,7 @@ View root;
     public void onStart() {
         super.onStart();
         FetchProduct();
+        LoadDetails();
     }
 
     @Override
@@ -101,7 +105,7 @@ View root;
         return root;
     }
 
-    private String UID;
+    private String UID,SenderID;
     private void FetchProduct() {
 
         Query query = FindRequestRef.whereEqualTo("User_ID",mAuth.getCurrentUser().getUid())
@@ -121,17 +125,48 @@ View root;
         adapter.setOnItemClickListener(new RequestAdapter.OnItemCickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                TopFindProviders topFindProviders = documentSnapshot.toObject(TopFindProviders.class);
+                TopFindRequest topFindProviders = documentSnapshot.toObject(TopFindRequest.class);
                 Reqemail = topFindProviders.getEmail();
                 Requsername  = topFindProviders.getUser_name();
                 Reqphone  = topFindProviders.getPhone();
                 ReqProfileImage = topFindProviders.getProfile_image();
                 ReQuestLocation = topFindProviders.getLocation();
-                ReqProfession = topFindProviders.getProfession();
                 UID = topFindProviders.getUser_ID();
+                SenderID = topFindProviders.getSender_ID();
                 RequestDialog();
 
 
+            }
+        });
+
+    }
+
+
+
+    private String userName,email,phone,location,userImage,narration,profession;
+
+    private void LoadDetails() {
+
+        TopFindProviderRef.document(mAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot,
+                                @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+                if (documentSnapshot.exists()){
+                    TopFindProviders topFinders = documentSnapshot.toObject(TopFindProviders.class);
+                    userImage = topFinders.getProfile_image();
+                    userName = topFinders.getUser_name();
+                    email = topFinders.getEmail();
+                    phone = topFinders.getPhone();
+                    location = topFinders.getLocation();
+                    narration = topFinders.getNarration();
+                    profession = topFinders.getProfession();
+
+
+
+                }
             }
         });
 
@@ -202,34 +237,58 @@ View root;
         store.put("location",ReQuestLocation);
         store.put("User_ID",UID);
         store.put("Profile_image",ReqProfileImage);
-        store.put("job_ID",mAuth.getCurrentUser().getUid());
+        store.put("job_ID",SenderID);
         store.put("timestamp", FieldValue.serverTimestamp());
 
-        FindRequestRef.document(Requsername).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+        HashMap<String,Object> store2 = new HashMap<>();
+        store2.put("User_name",userName);
+        store2.put("Email",email);
+        store2.put("Phone",phone);
+        store2.put("location",location);
+        store2.put("User_ID",mAuth.getCurrentUser().getUid());
+        store2.put("Profile_image",userImage);
+        store2.put("Category",profession);
+        store2.put("job_ID",SenderID);
+        store2.put("timestamp", FieldValue.serverTimestamp());
+
+
+
+
+        TopFindRef.document(SenderID)
+                .collection("Current_workers")
+                .document(mAuth.getCurrentUser().getUid()).set(store2).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    CurrentJobRef.document().set(store)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
-                                        ToastBack("Request Accepted..");
-                                    }else {
-                                        ToastBack(task.getException().getMessage());
-                                        if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
-                                    }
-                                }
-                            });
+                    FindRequestRef.document(SenderID).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                CurrentJobRef.document(mAuth.getCurrentUser().getUid()).set(store)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                                                    ToastBack("Request Accepted..");
+                                                }else {
+                                                    ToastBack(task.getException().getMessage());
+                                                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                                                }
+                                            }
+                                        });
+                            }else {
+                                ToastBack(task.getException().getMessage());
+                                if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                            }
+                        }
+                    });
+
                 }else {
-                    ToastBack(task.getException().getMessage());
+
                 }
             }
         });
-
-
-
 
 
     }
@@ -237,17 +296,7 @@ View root;
 
     private Toast backToast;
     private void ToastBack(String message){
-
-
         backToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
-        View view = backToast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#062D6E"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.parseColor("#2BB66A"));
         backToast.show();
     }
 }
