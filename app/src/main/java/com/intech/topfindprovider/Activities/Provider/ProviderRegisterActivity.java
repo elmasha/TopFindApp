@@ -23,6 +23,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Snackbar;
+import com.chootdev.csnackbar.Type;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -168,7 +172,7 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Store_Image_and_Details();
                         }else {
-                            ToastBack(task.getException().getMessage());
+                            showSnackBackOffline(getApplicationContext(),task.getException().getMessage());
                         }
                     }
                 });
@@ -241,6 +245,7 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                     store.put("Narration",narration);
                     store.put("Profession",profession);
                     store.put("device_token",token_Id);
+                    store.put("ratings",0);
                     store.put("User_ID",mAuth.getCurrentUser().getUid());
                     store.put("Profile_image",profileImage);
                     store.put("date_registered", FieldValue.serverTimestamp());
@@ -266,10 +271,11 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
                                         if (task.isSuccessful()){
                                             Intent logout = new Intent(getApplicationContext(), DashboardActivity.class);
+                                            showSnackBarOnline(getBaseContext(),"Registration was successful.");
                                             startActivity(logout);
                                         }else {
 
-                                            ToastBack("Registration failed try Again.");
+                                            showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                                             progressDialog.dismiss();
 
                                         }
@@ -279,7 +285,7 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
                             }else {
 
-                                ToastBack(task.getException().getMessage());
+                                showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                             }
                         }
                     });
@@ -290,7 +296,8 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
 
-                    ToastBack(e.getMessage());
+
+                    showSnackBackOffline(getBaseContext(),e.getMessage());
 
                 }
             });
@@ -405,6 +412,25 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
     }
 
+
+    //----InterNet Connection----
+    public void showSnackBackOffline(Context context, String msg) {
+        Snackbar.with(this,null).type(Type.ERROR).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+
+    }
+
+    public void showSnackBarOnline(Context context,String msg) {
+
+       Snackbar.with(this,null).type(Type.SUCCESS).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+
+
+    }
 
     private Toast backToast;
     private void ToastBack(String message){

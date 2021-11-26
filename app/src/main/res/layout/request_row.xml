@@ -23,11 +23,11 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/request_image"
-                    android:layout_width="70dp"
+                    android:layout_width="60dp"
                     android:layout_gravity="center_horizontal"
                     app:civ_border_color="@color/primary"
                     app:civ_border_width="3dp"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:src="@drawable/user"/>
                 <TextView
                     android:id="@+id/request_more"
@@ -62,7 +62,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Elmasha Omon"
-                    android:layout_marginTop="10dp"
                     android:textColor="@color/secondary"
                     android:textSize="16dp"
                     />
@@ -93,11 +92,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" Nairobi"
-                    android:layout_marginTop="8dp"
                     android:textStyle="bold"
-                    android:drawableLeft="@drawable/ic_location"
-                    android:drawableTint="@color/secondary"
+                    android:drawableTint="@color/primary"
                     android:textColor="@color/secondary"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/request_narration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" "
+                    android:maxLines="3"
+                    android:minLines="2"
+                    android:textColor="@color/grey"
                     android:textSize="16dp" />
 
                 <TextView
@@ -105,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" "
-                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="8dp"
                     android:textColor="@color/primary"
                     android:textSize="16dp" />
 

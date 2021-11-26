@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutCat"
     android:layout_width="wrap_content"
-    android:padding="3dp"
-    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:background="@drawable/border_grey"
+    android:orientation="horizontal"
     android:layout_height="wrap_content">
 
+        <View
+            android:id="@+id/onView"
+            android:layout_width="10dp"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:visibility="gone"
+            android:background="@drawable/btn_round_green"
+            android:layout_height="10dp"/>
 
         <TextView
             android:id="@+id/category_name"
             android:layout_width="wrap_content"
             android:text="Title"
-            android:textColor="@color/secondary"
-            android:textSize="19dp"
+            android:padding="2dp"
+            android:textColor="@color/grey"
+            android:textSize="16dp"
             android:layout_height="wrap_content"/>
 
 </LinearLayout>

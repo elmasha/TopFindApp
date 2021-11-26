@@ -75,6 +75,7 @@
                 android:layout_height="wrap_content">
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/edit_Tf_profile"
                     android:layout_width="wrap_content"
                     app:fab_icon="@drawable/ic_edit"
                     app:fab_size="mini"
@@ -99,6 +100,7 @@
 
 
             <LinearLayout
+                android:id="@+id/PrimeView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -235,6 +237,166 @@
 
 
             </LinearLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/EditView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        >
+
+
+
+
+                        <EditText
+                            android:id="@+id/edit_Tf_name"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:textStyle="bold"
+                            android:drawableRight="@drawable/ic_person"
+                            android:drawableTint="@color/primary"
+                            android:text="Elmasha Omon"
+                            android:textColor="@color/secondary"
+                            android:textSize="19dp"
+                            />
+
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        >
+
+
+
+
+
+                        <EditText
+                            android:id="@+id/edit_Tf_email"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:drawableRight="@drawable/ic_mail"
+                            android:drawableTint="@color/primary"
+                            android:text=" elmashavitran@gmail.com"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        >
+
+
+
+
+                        <EditText
+                            android:id="@+id/edit_Tf_phone"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:text="3444565"
+                            android:layout_gravity="end"
+                            android:drawableRight="@drawable/ic_phone_24"
+                            android:drawableTint="@color/primary"
+                            android:textColor="@color/secondary"
+                            android:textSize="18dp" />
+
+
+
+
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        >
+
+
+
+
+
+
+                        <EditText
+                            android:id="@+id/edit_Tf_location"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:text=" Nairobi"
+                            android:drawableRight="@drawable/ic_location"
+                            android:drawableTint="@color/primary"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+
+
+
+
+
+
+
+
+                    </LinearLayout>
+
+
+                    <Button
+                        android:id="@+id/edit_Tf_saveChanges"
+                        android:layout_width="300dp"
+                        android:text="Save changes"
+                        android:textColor="@color/white"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="18dp"
+                        android:textAllCaps="false"
+                        android:background="@drawable/btn_round_green"
+                        android:layout_height="wrap_content"/>
+
+
+
+
+
+
+
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
 
 
 

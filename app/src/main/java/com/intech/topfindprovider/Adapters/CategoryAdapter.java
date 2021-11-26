@@ -2,9 +2,11 @@ package com.intech.topfindprovider.Adapters;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +37,6 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
 
         if (model.getCategory() != null ){
             holder.title.setText(model.getCategory());
-
         }
 
 
@@ -57,16 +58,23 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
 
     class CategoryViewHolder extends RecyclerView.ViewHolder{
        private TextView title;
+       private LinearLayout linearLayoutView;
+       private View viewOn;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.category_name);
+            linearLayoutView = itemView.findViewById(R.id.layoutCat);
+            viewOn = itemView.findViewById(R.id.onView);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    itemView.setBackgroundResource(R.drawable.border_green);
+                    viewOn.setVisibility(View.VISIBLE);
+                    title.setTextColor(Color.parseColor("#2BB66A"));
                     int position = getAdapterPosition();
 
                     if (position != RecyclerView.NO_POSITION && listener != null){

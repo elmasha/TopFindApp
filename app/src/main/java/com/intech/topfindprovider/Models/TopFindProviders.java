@@ -5,6 +5,7 @@ import java.util.Date;
 public class TopFindProviders {
     private String User_name, Email, Phone, location, device_token, User_ID, Profile_image,Experience,Payment,
                     Narration,Profession;
+    private long ratings;
     private Date date_registered;
 
 
@@ -13,7 +14,7 @@ public class TopFindProviders {
 
 
     public TopFindProviders(String user_name, String email, String phone, String location, String device_token, String user_ID,
-                            String profile_image, String experience, String payment, String narration, String profession, Date date_registered) {
+                            String profile_image, String experience, String payment, String narration, String profession, long ratings, Date date_registered) {
         User_name = user_name;
         Email = email;
         Phone = phone;
@@ -25,9 +26,13 @@ public class TopFindProviders {
         Payment = payment;
         Narration = narration;
         Profession = profession;
+        this.ratings = ratings;
         this.date_registered = date_registered;
     }
 
+    public long getRatings() {
+        return ratings;
+    }
 
     public Date getDate_registered() {
         return date_registered;

@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -24,6 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Type;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -150,46 +155,7 @@ public class MainViewActivity extends AppCompatActivity {
 
 
 
-        linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                if (dropDownState == 0){
-                    catLayout.setVisibility(View.VISIBLE);
-                    dropDownState =1;
-                } else if (dropDownState ==1 ) {
-                    catLayout.setVisibility(View.GONE);
-                    dropDownState =0;
-                }
-            }
-        });
-        SearchCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (dropDownState == 0){
-                    catLayout.setVisibility(View.VISIBLE);
-                    dropDownState =1;
-                } else if (dropDownState ==1 ) {
-                    catLayout.setVisibility(View.GONE);
-                    dropDownState =0;
-                }
-            }
-        });
-
-        chooseCat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (dropDownState == 0){
-                    catLayout.setVisibility(View.VISIBLE);
-                    dropDownState =1;
-                } else if (dropDownState ==1 ) {
-                    catLayout.setVisibility(View.GONE);
-                    dropDownState =0;
-                }
-            }
-        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -197,7 +163,6 @@ public class MainViewActivity extends AppCompatActivity {
                 Category = "";
                 chooseCat.setText("Select category");
                 FetchCategory();
-                catLayout.setVisibility(View.GONE);
                 FetchProduct();
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -244,8 +209,6 @@ public class MainViewActivity extends AppCompatActivity {
 
 
 
-
-
         FetchCategory1();
 
 
@@ -270,14 +233,12 @@ public class MainViewActivity extends AppCompatActivity {
         BtnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // SendRequest();
                 inputText = textWrite.getText().toString();
-//                if (inputText.equals("")){
-//                    ToastBack("Message is empty");
-//                }else {
+                if (inputText.isEmpty()){
+                    ToastBack("Message is empty");
+                }else {
                     postJob(pickedCat);
-
-                //}
+                }
             }
         });
 
@@ -294,7 +255,7 @@ public class MainViewActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 TopFindProviders topFindProviders = document.toObject(TopFindProviders.class);
-                                SendRequest(topFindProviders.getUser_ID());
+                                SendRequest(inputText,topFindProviders.getUser_ID());
                             }
                         } else {
 
@@ -330,7 +291,7 @@ public class MainViewActivity extends AppCompatActivity {
         ReText = mView.findViewById(R.id.input_post_request);
 
 
-        ReqMessage = ReText.getText().toString().trim();
+
         ReText.setHint("Write a message to "+ Requsername +"..");
 
 
@@ -359,7 +320,13 @@ public class MainViewActivity extends AppCompatActivity {
         BtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    SendRequest(RequestID);
+                ReqMessage = ReText.getText().toString().trim();
+                if (ReqMessage.isEmpty()){
+                    ToastBack("Enter a message");
+                }else {
+                    SendRequest(ReqMessage,RequestID);
+                }
+
                 }
 
         });
@@ -379,7 +346,7 @@ public class MainViewActivity extends AppCompatActivity {
         recyclerViewPost.setHasFixedSize(true);
         recyclerViewPost.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
-                = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.VERTICAL, false);
+                = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPost.setLayoutManager(LayoutManager);
         recyclerViewPost.setAdapter(categoryAdapter);
         categoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemCickListener() {
@@ -410,7 +377,7 @@ public class MainViewActivity extends AppCompatActivity {
         mRecyclerView2.setHasFixedSize(true);
         mRecyclerView2.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
-                = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.VERTICAL, false);
+                = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView2.setLayoutManager(LayoutManager);
         mRecyclerView2.setAdapter(categoryAdapter);
         categoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemCickListener() {
@@ -420,16 +387,12 @@ public class MainViewActivity extends AppCompatActivity {
                 Category = category.getCategory();
                 if (Category != null){
                     FetchProduct();
-                    chooseCat.setText(Category);
-                    catLayout.setVisibility(View.GONE);
                 }
 
             }
         });
 
     }
-
-
 
 
     private void FetchProduct() {
@@ -547,7 +510,7 @@ public class MainViewActivity extends AppCompatActivity {
 
     String IID;
     private Snackbar snackbar;
-    private void SendRequest(String id){
+    private void SendRequest(String msg ,String id){
         String ID =  FindRequestRef.document().getId();
 
         HashMap<String,Object> request = new HashMap<>();
@@ -557,7 +520,7 @@ public class MainViewActivity extends AppCompatActivity {
         request.put("location",Flocation);
         request.put("User_ID",id);
         request.put("Request_ID",ID);
-        request.put("Request_message",ReqMessage);
+        request.put("Request_message",msg);
         request.put("Sender_ID",mAuth.getCurrentUser().getUid());
         request.put("timestamp", FieldValue.serverTimestamp());
         request.put("Profile_image",FuserImage);
@@ -571,11 +534,17 @@ public class MainViewActivity extends AppCompatActivity {
                     if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
                     if (dialog_postJob != null)dialog_postJob.dismiss();
 
-                    snackbar = Snackbar.make(relativeLayout, "Request sent successful", Snackbar.LENGTH_LONG);
+                    snackbar = Snackbar.make(relativeLayout, "Request sent successful", Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("NOTIFY", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Notify(id);
+                        }
+                    });
+                    snackbar.setAction("CANCEL", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
                         }
                     });
                     snackbar.show();
@@ -597,16 +566,10 @@ public class MainViewActivity extends AppCompatActivity {
     }
 
 
-    private void SnackBack(String msg){
-        snackbar = Snackbar.make(relativeLayout, msg, Snackbar.LENGTH_LONG);
-        snackbar.setAction("Close", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
-        snackbar.show();
-    }
+
+
+
 
     private void Notify(String id){
         HashMap<String ,Object> notify = new HashMap<>();
@@ -653,6 +616,7 @@ public class MainViewActivity extends AppCompatActivity {
         } else {
 
             ToastBack("Double tap to exit");
+
             if(getSupportFragmentManager().findFragmentById(R.id.Frame_main) != null) {
                 getSupportFragmentManager()
                         .beginTransaction().

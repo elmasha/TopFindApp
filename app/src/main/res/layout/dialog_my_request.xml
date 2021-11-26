@@ -25,7 +25,7 @@
                 android:id="@+id/TpView_userImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_margin="30dp"
+                android:layout_margin="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/user"
                 app:civ_border_color="@color/primary"
@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 app:fab_icon="@drawable/ic_phone"
-                android:layout_margin="10dp"
                 app:fab_colorNormal="@color/secondary"
                 app:fab_colorPressed="@color/primary"
                 />
@@ -53,73 +52,93 @@
                 >
 
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_horizontal"
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/TpView_name"
-                        android:layout_margin="4dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_person"
-                        android:drawableTint="@color/primary"
-                        android:text="Elmasha Omond"
-                        android:textStyle="bold"
-                        android:textColor="@color/secondary"
-                        android:textSize="19dp"
-                        />
-
-
-                    <TextView
-                        android:id="@+id/TpView_email"
-                        android:layout_width="wrap_content"
-                        android:drawableTint="@color/primary"
-                        android:layout_margin="4dp"
-                        android:drawableLeft="@drawable/ic_mail"
-                        android:layout_height="wrap_content"
-                        android:text="elmashavitran@gmail.com"
-                        android:textColor="@color/secondary"
-                        android:textSize="17dp" />
-
-
-
-                    <TextView
-                        android:id="@+id/TpView_phone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="073444565"
-                        android:layout_margin="4dp"
-                        android:drawableLeft="@drawable/ic_phone_24"
-                        android:drawableTint="@color/primary"
-                        android:textColor="@color/secondary"
-                        android:textSize="17dp" />
-
-                    <TextView
-                        android:id="@+id/TpView_profession"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="@color/secondary"
-                        android:textSize="17dp" />
+                        android:layout_height="wrap_content">
 
 
-                    <TextView
-                        android:id="@+id/TpView_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" Nairobi"
-                        android:layout_marginTop="8dp"
-                        android:textStyle="bold"
-                        android:drawableLeft="@drawable/ic_location"
-                        android:drawableTint="@color/primary"
-                        android:textColor="@color/secondary"
-                        android:textSize="17dp" />
+                        <TextView
+                            android:id="@+id/TpView_name"
+                            android:layout_margin="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_person"
+                            android:drawableTint="@color/primary"
+                            android:text="Elmasha Omond"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:textSize="19dp"
+                            />
 
-                </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/TpView_email"
+                            android:layout_width="wrap_content"
+                            android:drawableTint="@color/primary"
+                            android:layout_margin="4dp"
+                            android:drawableLeft="@drawable/ic_mail"
+                            android:layout_height="wrap_content"
+                            android:text="elmashavitran@gmail.com"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+
+
+                        <TextView
+                            android:id="@+id/TpView_phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="073444565"
+                            android:layout_margin="4dp"
+                            android:drawableLeft="@drawable/ic_phone_24"
+                            android:drawableTint="@color/primary"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:id="@+id/TpView_profession"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:visibility="gone"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+
+                        <TextView
+                            android:id="@+id/TpView_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" Nairobi"
+                            android:layout_marginTop="8dp"
+                            android:textStyle="bold"
+                            android:drawableLeft="@drawable/ic_location"
+                            android:drawableTint="@color/primary"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:id="@+id/TpView_narration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_marginTop="8dp"
+                            android:textColor="@color/lightGrey"
+                            android:maxLines="10"
+                            android:minLines="4"
+                            android:textSize="16dp" />
+
+                    </LinearLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
 
 
 
@@ -127,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:layout_margin="20dp"
+                    android:layout_margin="10dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content">
 

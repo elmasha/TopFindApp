@@ -1,8 +1,5 @@
 package com.intech.topfindprovider.Fragments.Provider;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,7 +31,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.intech.topfindprovider.Activities.Provider.ViewRequestActivity;
 import com.intech.topfindprovider.Adapters.RequestAdapter;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFindRequest;
@@ -133,6 +129,7 @@ View root;
                 ReQuestLocation = topFindProviders.getLocation();
                 UID = topFindProviders.getUser_ID();
                 SenderID = topFindProviders.getSender_ID();
+                ReqMessage = topFindProviders.getRequest_message();
                 RequestDialog();
 
 
@@ -173,7 +170,7 @@ View root;
     }
 
     private AlertDialog dialog_sendRequest;
-    private TextView emailInput,usernameInput,Location,ReCancel,ReProfession;
+    private TextView emailInput,usernameInput,Location,ReCancel,ReProfession,Narration;
     private EditText ReText;
     private String Reqemail,Requsername,Reqphone,ReqMessage,ReqProfileImage,ReQuestLocation,RequestID,ReqProfession;
     private Button BtnConfirm;
@@ -193,6 +190,7 @@ View root;
         Location = mView.findViewById(R.id.TpView_location);
         ReCancel = mView.findViewById(R.id.TpView_Cancel);
         ReQuestImage = mView.findViewById(R.id.TpView_userImage);
+        Narration =mView.findViewById(R.id.TpView_narration);
         ReProfession = mView.findViewById(R.id.TpView_profession);
 
 
@@ -201,6 +199,7 @@ View root;
         emailInput.setText(Reqemail);
         Location.setText(ReQuestLocation);
         ReProfession.setText(ReqProfession);
+        Narration.setText(ReqMessage);
         if (ReqProfileImage != null){
             Picasso.with(getContext())
                     .load(ReqProfileImage).placeholder(R.drawable.user)

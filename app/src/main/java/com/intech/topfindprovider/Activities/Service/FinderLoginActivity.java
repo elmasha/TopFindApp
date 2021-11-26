@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -16,9 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Snackbar;
+import com.chootdev.csnackbar.Type;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,8 +108,9 @@ public class FinderLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             UpdateDeviceToken(mAuth.getCurrentUser().getUid());
+
                         }else {
-                            ToastBack(task.getException().getMessage());
+                            showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                             progressDialog.dismiss();
                         }
                     }
@@ -124,13 +129,14 @@ public class FinderLoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                   ToastBack("Authentication Succeeded ");
+
+                   showSnackBarOnline(getBaseContext(),"Authentication Succeeded ");
                     progressDialog.dismiss();
                     startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
 
                 }else {
 
-                    ToastBack(task.getException().getMessage());
+                    showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                     progressDialog.dismiss();
 
                 }
@@ -162,12 +168,22 @@ public class FinderLoginActivity extends AppCompatActivity {
 
     }
 
-    private Snackbar snackbar;
-    private void ToastBack(String msg){
-        snackbar = Snackbar.make(linearLayout, msg, Snackbar.LENGTH_LONG);
-        snackbar.show();
+    //----InterNet Connection----
+    public void showSnackBackOffline(Context context, String msg) {
+        com.chootdev.csnackbar.Snackbar.with(this,null).type(Type.ERROR).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
     }
 
+    public void showSnackBarOnline(Context context,String msg) {
+
+        Snackbar.with(this, null).type(Type.SUCCESS).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+
+    }
 
     @Override
     public void onBackPressed() {

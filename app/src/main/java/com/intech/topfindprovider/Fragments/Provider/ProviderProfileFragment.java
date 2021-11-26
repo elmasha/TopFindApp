@@ -1,6 +1,7 @@
 package com.intech.topfindprovider.Fragments.Provider;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,13 +15,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.format.DateFormat;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Snackbar;
+import com.chootdev.csnackbar.Type;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,14 +61,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProviderProfileFragment extends Fragment {
 private View root;
     private TextView UserName,Email,Phone,Location,logout,Narration,Profession,Experience;
+    private EditText EditUserName,EditEmail,EditPhone,EditLocation,EditNarration,EditProfession,EditExperience;
     private CircleImageView ProfileImage;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference TopFindRef = db.collection("TopFind_Provider");
     CollectionReference CurrentJobRef = db.collection("Current_clients");
     private RecyclerView recyclerViewJobs;
+    private RatingBar ratingBar;
     private CurrentJobsAdapter adapter;
-
+    private FloatingActionButton editProfile;
+    private LinearLayout linearLayoutProfile;
+    private Button BtnSaveChanges;
+    private int EdtState = 0;
     @Override
     public void onStart() {
         super.onStart();
@@ -85,7 +101,43 @@ private View root;
         logout = root.findViewById(R.id.LogOut);
         Profession =root.findViewById(R.id.Tp_profession);
         Experience = root.findViewById(R.id.Tp_experince);
+        ratingBar = root.findViewById(R.id.ratingBarProfile);
         recyclerViewJobs= root.findViewById(R.id.recycler_current_jobs);
+        editProfile =  root.findViewById(R.id.edit_Tf_profile2);
+        linearLayoutProfile = root.findViewById(R.id.EditView2);
+
+        EditEmail = root.findViewById(R.id.edit_Tf_email2);
+        EditUserName = root.findViewById(R.id.edit_Tf_name2);
+        EditLocation = root.findViewById(R.id.edit_Tf_location2);
+        EditPhone = root.findViewById(R.id.edit_Tf_phone2);
+        EditNarration =root.findViewById(R.id.edit_Tf_narration2);
+        EditProfession = root.findViewById(R.id.edit_Tf_profession2);
+
+        BtnSaveChanges = root.findViewById(R.id.edit_Tf_saveChanges2);
+
+        BtnSaveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!validation()){
+                }else {
+                    SaveChanges();
+                }
+            }
+        });
+
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (EdtState == 0){
+                    linearLayoutProfile.setVisibility(View.VISIBLE);
+                    EdtState = 1;
+                }else if (EdtState ==1 ){
+                    linearLayoutProfile.setVisibility(View.GONE);
+                    EdtState = 0;
+                }
+            }
+        });
 
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +151,61 @@ private View root;
         return root;
     }
 
+
+    private void SaveChanges() {
+
+        HashMap<String,Object> store = new HashMap<>();
+        store.put("User_name",userName);
+        store.put("Email",email);
+        store.put("Phone",phone);
+        store.put("location",location);
+        store.put("Narration",narration);
+        store.put("Profession",profession);
+
+
+        TopFindRef.document(mAuth.getCurrentUser().getUid()).update(store).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
+
+                if (task.isSuccessful()){
+
+                    showSnackBarOnline(getContext(),"Saved changes..");
+                    if (EdtState == 1){
+                        linearLayoutProfile.setVisibility(View.GONE);
+                        EdtState =0;
+                    }else if (EdtState == 0){
+                        linearLayoutProfile.setVisibility(View.VISIBLE);
+                        EdtState =1;
+                    }
+
+                }else {
+
+                    showSnackBackOffline(getContext(),task.getException().getMessage());
+
+
+                }
+            }
+        });
+    }
+
+
+
+    //----InterNet Connection----
+    public void showSnackBackOffline(Context context, String msg) {
+        Snackbar.with(getContext(),null).type(Type.ERROR).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+    }
+
+    public void showSnackBarOnline(Context context,String msg) {
+
+        Snackbar.with(getContext(), null).type(Type.SUCCESS).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+
+    }
 
     private void FetchProduct() {
 
@@ -129,6 +236,45 @@ private View root;
     }
 
 
+    private boolean validation(){
+        userName = EditUserName.getText().toString();
+        email = EditEmail.getText().toString();
+        phone = EditPhone.getText().toString();
+        location = EditLocation.getText().toString();
+        narration = EditNarration.getText().toString();
+        profession = EditProfession.getText().toString();
+
+
+        if (userName.isEmpty()){
+            EditUserName.setError("Provide your full name");
+            return false;
+        }
+        else if (email.isEmpty()){
+            EditEmail.setError("Provide your email.");
+            return false;
+        }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            EditEmail.setError("Please enter a Valid email");
+            return false;
+        }else if (narration.isEmpty()){
+            EditNarration.setError("Provide your narration.");
+            return false;
+        }else if (profession.isEmpty()){
+            EditProfession.setError("Provide your profession.");
+            return false;
+        }
+        else if (phone.isEmpty()){
+            EditPhone.setError("Provide your phone number.");
+            return false;
+        }else if (location.isEmpty()){
+            EditLocation.setError("Provide your location.");
+            return false;
+        }
+        else{
+
+            return true;
+        }
+
+    }
 
 
     private AlertDialog dialog2;
@@ -191,6 +337,7 @@ private View root;
 
 
     private String userName,email,phone,location,userImage,narration,profession,experience;
+    private long rates;
 
     private void LoadDetails() {
 
@@ -211,6 +358,14 @@ private View root;
                     narration = topFinders.getNarration();
                     profession = topFinders.getProfession();
                     experience = topFinders.getExperience();
+                    rates = topFinders.getRatings();
+
+                    EditUserName.setText(userName);
+                    EditEmail.setText(email);
+                    EditLocation.setText(location);
+                    EditNarration.setText(narration);
+                    EditPhone.setText(phone);
+                    EditProfession.setText(profession);
 
 
                     UserName.setText(userName);
@@ -220,6 +375,7 @@ private View root;
                     Narration.setText(narration);
                     Profession.setText(profession);
                     Experience.setText(experience);
+                    ratingBar.setRating(Float.parseFloat(rates+""));
 
                     if (userImage != null){
                         Picasso.with(getContext())
@@ -241,10 +397,7 @@ private View root;
 
     private Toast backToast;
     private void ToastBack(String message){
-
-
         backToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
-
         backToast.show();
     }
 }

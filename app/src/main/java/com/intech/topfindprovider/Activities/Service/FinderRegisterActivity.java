@@ -23,12 +23,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chootdev.csnackbar.Align;
+import com.chootdev.csnackbar.Duration;
+import com.chootdev.csnackbar.Snackbar;
+import com.chootdev.csnackbar.Type;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -162,7 +165,8 @@ public class FinderRegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Store_Image_and_Details(mAuth.getCurrentUser().getUid());
                         }else {
-                            ToastBack(task.getException().getMessage());
+
+                            showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                             progressDialog.dismiss();
                         }
                     }
@@ -259,7 +263,8 @@ public class FinderRegisterActivity extends AppCompatActivity {
 
                             }else {
 
-                                ToastBack("Registration failed try Again.");
+
+                                showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                                 progressDialog.dismiss();
 
                             }
@@ -273,7 +278,8 @@ public class FinderRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
 
-                    ToastBack(e.getMessage());
+
+                    showSnackBackOffline(getBaseContext(),e.getMessage());
                     progressDialog.dismiss();
 
                 }
@@ -286,10 +292,21 @@ public class FinderRegisterActivity extends AppCompatActivity {
 
 
 
-    private Snackbar snackbar;
-    private void ToastBack(String msg){
-        snackbar = Snackbar.make(linearLayout, msg, Snackbar.LENGTH_LONG);
-        snackbar.show();
+    //----InterNet Connection----
+    public void showSnackBackOffline(Context context, String msg) {
+        com.chootdev.csnackbar.Snackbar.with(this,null).type(Type.ERROR).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+    }
+
+    public void showSnackBarOnline(Context context,String msg) {
+
+        Snackbar.with(this, null).type(Type.SUCCESS).message(msg)
+                .duration(Duration.LONG)
+                .fillParent(true)
+                .textAlign(Align.CENTER).show();
+
     }
 
 
@@ -336,7 +353,7 @@ public class FinderRegisterActivity extends AppCompatActivity {
             RPassword.setError("Password do no match");
             return false;
         }else if (ImageUri==null){
-            ToastBack("Provide profile photo");
+            showSnackBackOffline(getBaseContext(),"Provide profile photo");
             return false;
         }
         else if (phone.isEmpty()){

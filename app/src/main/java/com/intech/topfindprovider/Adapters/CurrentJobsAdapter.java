@@ -41,7 +41,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
 
         if(context != null | model.getProfile_image() != null) {
             Picasso.with(context).load(model.getProfile_image())
-                    .placeholder(R.drawable.load).error(R.drawable.errorimage).into(holder.profile);
+                    .placeholder(R.drawable.user).error(R.drawable.user).into(holder.profile);
         }
 
     }
@@ -81,8 +81,6 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
 
                     if (position != RecyclerView.NO_POSITION && listener != null){
                         listener.onItemClick(getSnapshots().getSnapshot(position),position);
-
-
                     }
                 }
             });

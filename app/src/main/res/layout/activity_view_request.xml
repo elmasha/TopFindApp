@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.Provider.ViewRequestActivity">
+    tools:context=".Activities.Service.ViewRequestActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,6 +24,19 @@
                 android:drawableLeft="@drawable/ic_west"
                 android:layout_margin="26dp"
                 android:layout_height="wrap_content"/>
+
+
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/TpView_userImage"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/user"
+                app:civ_border_color="@color/primary"
+                app:civ_border_width="3dp" />
 
 
 
@@ -48,15 +61,275 @@
                 >
 
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/TpView_userImage"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/TpView_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Elmasha Omond"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/secondary"
+                        android:textSize="17dp"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/TpView_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="elmashavitran@gmail.com"
+                        android:textColor="@color/secondary"
+                        android:textSize="17dp" />
+
+
+
+                    <TextView
+                        android:id="@+id/TpView_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="073444565"
+                        android:layout_margin="8dp"
+                        android:textColor="@color/secondary"
+                        android:textSize="17dp" />
+
+
+                    <TextView
+                        android:id="@+id/TpView_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Nairobi"
+                        android:layout_margin="8dp"
+                        android:textStyle="bold"
+                        android:drawableLeft="@drawable/ic_location"
+                        android:drawableTint="@color/secondary"
+                        android:textColor="@color/secondary"
+                        android:textSize="17dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="8dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Experience:"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/grey"
+                            android:textSize="17dp" />
+
+
+                        <TextView
+                            android:id="@+id/TpView_expereince"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_marginStart="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="8dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Profession:"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/grey"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:id="@+id/TpView_profession"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_marginStart="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+                    </LinearLayout>
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="15dp"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Narration:"
+                            android:textStyle="bold"
+                            android:textColor="@color/secondary"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:id="@+id/TpView_narration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/grey"
+                            android:textSize="16dp" />
+
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
                     android:layout_margin="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/user"
-                    app:civ_border_color="@color/primary"
-                    app:civ_border_width="3dp" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+                        <com.getbase.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/CallProvider"
+                            android:layout_width="wrap_content"
+                            app:fab_size="mini"
+                            app:fab_colorPressed="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            app:fab_colorNormal="@color/secondary"
+                            app:fab_icon="@drawable/ic_phone"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Call"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_height="wrap_content"/>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+                        <com.getbase.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/SmsProvider"
+                            android:layout_width="wrap_content"
+                            app:fab_size="mini"
+                            app:fab_colorPressed="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            app:fab_colorNormal="@color/secondary"
+                            app:fab_icon="@drawable/ic_sms"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Sms"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_height="wrap_content"/>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+                        <com.getbase.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/RateProvider"
+                            android:layout_width="wrap_content"
+                            app:fab_size="mini"
+                            app:fab_colorPressed="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            app:fab_colorNormal="@color/secondary"
+                            app:fab_icon="@drawable/rating"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Rate "
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_height="wrap_content"/>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+                        <com.getbase.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/DeleteProvider"
+                            android:layout_width="wrap_content"
+                            app:fab_size="mini"
+                            app:fab_colorPressed="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            app:fab_colorNormal="@color/secondary"
+                            app:fab_icon="@drawable/ic_delete_64"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Delete "
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_height="wrap_content"/>
+
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+
+
 
 
 
@@ -69,58 +342,7 @@
                     >
 
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:id="@+id/TpView_name"
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_height="wrap_content"
-                            android:text="Elmasha Omond"
-                            android:textStyle="bold"
-                            android:layout_margin="10dp"
-                            android:textColor="@color/secondary"
-                            android:textSize="16dp"
-                            />
 
-
-                        <TextView
-                            android:id="@+id/TpView_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="elmashavitran@gmail.com"
-                            android:textColor="@color/secondary"
-                            android:textSize="15dp" />
-
-
-
-                        <TextView
-                            android:id="@+id/TpView_phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="073444565"
-                            android:layout_gravity="center_horizontal"
-                            android:textColor="@color/secondary"
-                            android:textSize="16dp" />
-
-
-                        <TextView
-                            android:id="@+id/TpView_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" Nairobi"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="8dp"
-                            android:textStyle="bold"
-                            android:drawableLeft="@drawable/ic_location"
-                            android:drawableTint="@color/secondary"
-                            android:textColor="@color/secondary"
-                            android:textSize="16dp" />
-
-                    </LinearLayout>
 
 
 
@@ -128,6 +350,7 @@
                         android:layout_width="wrap_content"
                         android:orientation="horizontal"
                         android:padding="8dp"
+                        android:visibility="gone"
                         android:layout_margin="20dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_height="wrap_content">
