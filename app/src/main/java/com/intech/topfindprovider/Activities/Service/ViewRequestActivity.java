@@ -5,7 +5,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,13 +28,15 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.hsalf.smilerating.SmileRating;
 import com.hsalf.smileyrating.SmileyRating;
+import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -87,7 +92,7 @@ public class ViewRequestActivity extends AppCompatActivity {
         Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Delete_Alert();
             }
         });
 
@@ -100,6 +105,68 @@ public class ViewRequestActivity extends AppCompatActivity {
 
         LoadDetails();
         LoadDetails2();
+    }
+
+
+    private android.app.AlertDialog dialog_delete;
+    public void Delete_Alert() {
+
+        Date currentTime = Calendar.getInstance().getTime();
+        String date = DateFormat.format("dd MMM ,yyyy | hh:mm a",new Date(String.valueOf(currentTime))).toString();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        dialog_delete = builder.create();
+        dialog_delete.show();
+        builder.setMessage("Are you sure to delete this user .\n"+date);
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Delete();
+
+                    }
+                });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog_delete.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+
+    void Delete(){
+
+        String User_ID = mAuth.getCurrentUser().getUid();
+
+        HashMap<String,Object> store = new HashMap<>();
+        store.put("device_token", FieldValue.delete());
+
+
+
+        TopFindRef.document(mAuth.getCurrentUser().getUid())
+                .collection("Current_workers").document(ID).delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()){
+
+                    Intent logout = new Intent(getApplicationContext(), FinderProfileActivity.class);
+                    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(logout);
+                    dialog_delete.dismiss();
+
+                }else {
+
+                    showSnackBackOffline(getBaseContext(),task.getException().getMessage());
+
+                }
+
+            }
+        });
+
     }
 
     private AlertDialog dialog_rate;

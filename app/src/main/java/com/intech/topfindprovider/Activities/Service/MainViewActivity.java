@@ -1,8 +1,11 @@
 package com.intech.topfindprovider.Activities.Service;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,6 +37,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,6 +52,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.intech.topfindprovider.Adapters.CategoryAdapter;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
 import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
+import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.Category;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
@@ -93,6 +99,12 @@ public class MainViewActivity extends AppCompatActivity {
     }
 
 
+
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +122,42 @@ public class MainViewActivity extends AppCompatActivity {
         linearLayoutSearch = findViewById(R.id.SearchLayout);
         relativeLayout = findViewById(R.id.relative);
         imageViewNotify = findViewById(R.id.Notification);
+
+
+        dl = (DrawerLayout) findViewById(R.id.drawerMenu);
+//        dl.closeDrawer(GravityCompat.END);
+
+
+        nv = (NavigationView) findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.account:
+                        Toast.makeText(MainViewActivity.this, "My Account", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.myJobs:
+                        Toast.makeText(MainViewActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.mycart:
+                        Toast.makeText(MainViewActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        return true;
+                }
+
+
+                return true;
+
+            }
+        });
+
+
+
+
+
+
 
 
         imageViewNotify.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +226,11 @@ public class MainViewActivity extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), FinderProfileActivity.class));
+                Boolean
+                        isOpen = dl.isDrawerOpen(GravityCompat.END);
+                dl.openDrawer(GravityCompat.START);
+
+                //startActivity(new Intent(getApplicationContext(), FinderProfileActivity.class));
             }
         });
 
@@ -541,12 +593,7 @@ public class MainViewActivity extends AppCompatActivity {
                             Notify(id);
                         }
                     });
-                    snackbar.setAction("CANCEL", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            snackbar.dismiss();
-                        }
-                    });
+
                     snackbar.show();
 
 
@@ -574,7 +621,7 @@ public class MainViewActivity extends AppCompatActivity {
     private void Notify(String id){
         HashMap<String ,Object> notify = new HashMap<>();
         notify.put("title","New Request");
-        notify.put("description","You have new Request from "+FuserName);
+        notify.put("description","You have received new Request from "+FuserName);
         notify.put("to",id);
         notify.put("from",mAuth.getCurrentUser().getUid());
         notify.put("timestamp",FieldValue.serverTimestamp());

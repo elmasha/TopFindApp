@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/account"
+        android:icon="@drawable/ic_person"
+        android:title="My Account"/>
+    <item android:id="@+id/notification"
+        android:icon="@drawable/ic_notification"
+        android:title="Notification"/>
+
+    <item android:id="@+id/myJobs"
+        android:icon="@drawable/ic_phone_24"
+        android:title="My Job"/>
+
+    <item android:id="@+id/refer"
+        android:icon="@drawable/ic_sms"
+        android:title="Refer s friend"/>
+
+
+    <item android:id="@+id/mycart"
+        android:icon="@drawable/ic_delete_64"
+        android:title="My Cart"/>
+
+</menu>

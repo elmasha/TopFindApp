@@ -7,133 +7,140 @@
     android:layout_height="match_parent"
     tools:context=".Activities.Service.MainViewActivity">
 
-    <LinearLayout
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/bg_blue"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/ProfilePicture"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/user"
-                        app:civ_border_color="@color/primary"
-                        app:civ_border_width="3dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:textStyle="bold"
-                        android:text="My profile"
-                        android:textSize="18dp"
-                        android:textColor="@color/primary"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="wrap_content"/>
-
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/Notification"
-                    android:layout_width="28dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/notification"
-                    android:layout_height="28dp"/>
-
-
-
-            </RelativeLayout>
-
-
-
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp"
-            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/SearchLayout"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:background="@drawable/bg_blue"
                 android:layout_height="wrap_content">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/searchCat2"
-                    android:layout_width="wrap_content"
-                    android:padding="2dp"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/ic_double_arrow_left_28"
-                    android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="5dp"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/choose_category"
-                    android:layout_width="wrap_content"
-                    android:text="Select category"
-                    android:textSize="18dp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/primary"
-                    android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:id="@+id/searchCat"
-                    android:layout_width="wrap_content"
-                    android:padding="2dp"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/ic_double_arrow_right_28"
-                    android:layout_height="wrap_content"/>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ProfilePicture"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/user"
+                            app:civ_border_color="@color/primary"
+                            app:civ_border_width="3dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textStyle="bold"
+                            android:text="My profile"
+                            android:textSize="18dp"
+                            android:textColor="@color/primary"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_height="wrap_content"/>
+
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/Notification"
+                        android:layout_width="28dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/notification"
+                        android:layout_height="28dp"/>
+
+
+
+                </RelativeLayout>
+
+
 
 
 
             </LinearLayout>
 
 
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/SearchCategory"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                app:fab_size="mini"
-                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_margin="5dp"
                 android:layout_gravity="center_horizontal"
-                app:fab_colorNormal="@color/secondary"
-                app:fab_colorPressed="@color/primary"
-                app:fab_icon="@drawable/ic_earch"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/SearchLayout"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:id="@+id/searchCat2"
+                        android:layout_width="wrap_content"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:drawableLeft="@drawable/ic_double_arrow_left_28"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/choose_category"
+                        android:layout_width="wrap_content"
+                        android:text="Select category"
+                        android:textSize="18dp"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/primary"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/searchCat"
+                        android:layout_width="wrap_content"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:drawableLeft="@drawable/ic_double_arrow_right_28"
+                        android:layout_height="wrap_content"/>
+
+
+
+                </LinearLayout>
+
+
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/SearchCategory"
+                    android:layout_width="wrap_content"
+                    app:fab_size="mini"
+                    android:visibility="gone"
+                    android:layout_gravity="center_horizontal"
+                    app:fab_colorNormal="@color/secondary"
+                    app:fab_colorPressed="@color/primary"
+                    app:fab_icon="@drawable/ic_earch"
+                    android:layout_height="wrap_content"/>
 
 
 
 
-        </LinearLayout>
+            </LinearLayout>
 
 
             <FrameLayout
@@ -159,66 +166,100 @@
 
 
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/SwipeRefresh"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/SwipeRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_provider"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/PostJob"
+                android:layout_width="wrap_content"
+                app:fab_size="normal"
+                android:layout_gravity="center_horizontal"
+                app:fab_colorNormal="@color/secondary"
+                app:fab_colorPressed="@color/primary"
+                app:fab_icon="@drawable/ic_upload"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Post job"
+                android:background="@drawable/btn_round_blue"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18dp"
+                android:layout_height="wrap_content"/>
+
+
+
+        </LinearLayout>
+
+
+
+        <FrameLayout
+            android:id="@+id/Frame_main"
+            android:layout_marginTop="80dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        </FrameLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_provider"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+<!--        <androidx.drawerlayout.widget.DrawerLayout-->
+<!--            android:id="@+id/drawerMenu"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:background="@color/white"-->
+<!--            android:layout_height="match_parent">-->
 
 
 
+<!--            <com.google.android.material.navigation.NavigationView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:menu="@menu/nav_menu"-->
+<!--                android:layout_gravity="start"-->
+<!--                app:headerLayout="@layout/nav_header"-->
+<!--                android:id="@+id/nv">-->
 
-    </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/PostJob"
-            android:layout_width="wrap_content"
-            app:fab_size="normal"
-            android:layout_gravity="center_horizontal"
-            app:fab_colorNormal="@color/secondary"
-            app:fab_colorPressed="@color/primary"
-            app:fab_icon="@drawable/ic_upload"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="Post job"
-            android:background="@drawable/btn_round_blue"
-            android:textColor="@color/primary"
-            android:textStyle="bold"
-            android:padding="8dp"
-            android:layout_gravity="center_horizontal"
-            android:textSize="18dp"
-            android:layout_height="wrap_content"/>
+<!--            </com.google.android.material.navigation.NavigationView>-->
 
 
 
-    </LinearLayout>
+<!--        </androidx.drawerlayout.widget.DrawerLayout>-->
 
 
 
-    <FrameLayout
-        android:id="@+id/Frame_main"
-        android:layout_marginTop="80dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+
 
 
 </RelativeLayout>

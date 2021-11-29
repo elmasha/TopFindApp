@@ -263,7 +263,8 @@ View root;
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                CurrentJobRef.document(mAuth.getCurrentUser().getUid()).set(store)
+                                TopFindProviderRef.document(mAuth.getCurrentUser().getUid())
+                                        .collection("Current_clients").document(SenderID).set(store)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {

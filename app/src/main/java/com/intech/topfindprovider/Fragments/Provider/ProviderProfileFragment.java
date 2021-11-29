@@ -60,7 +60,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProviderProfileFragment extends Fragment {
 private View root;
-    private TextView UserName,Email,Phone,Location,logout,Narration,Profession,Experience;
+    private TextView UserName,Email,Phone,Location,logout,Narration,Profession,Experience,closeEdit;
     private EditText EditUserName,EditEmail,EditPhone,EditLocation,EditNarration,EditProfession,EditExperience;
     private CircleImageView ProfileImage;
     private FirebaseAuth mAuth;
@@ -71,7 +71,7 @@ private View root;
     private RatingBar ratingBar;
     private CurrentJobsAdapter adapter;
     private FloatingActionButton editProfile;
-    private LinearLayout linearLayoutProfile;
+    private LinearLayout linearLayoutProfile,layoutEditButton;
     private Button BtnSaveChanges;
     private int EdtState = 0;
     @Override
@@ -114,6 +114,24 @@ private View root;
         EditProfession = root.findViewById(R.id.edit_Tf_profession2);
 
         BtnSaveChanges = root.findViewById(R.id.edit_Tf_saveChanges2);
+        layoutEditButton = root.findViewById(R.id.editButton2);
+        closeEdit = root.findViewById(R.id.closeEdit2);
+
+
+        closeEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (EdtState == 1){
+                    linearLayoutProfile.setVisibility(View.VISIBLE);
+                    layoutEditButton.setVisibility(View.GONE);
+                    EdtState = 0;
+                }else if (EdtState ==0 ){
+                    linearLayoutProfile.setVisibility(View.GONE);
+                    layoutEditButton.setVisibility(View.VISIBLE);
+                    EdtState = 1;
+                }
+            }
+        });
 
         BtnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,9 +149,11 @@ private View root;
             public void onClick(View view) {
                 if (EdtState == 0){
                     linearLayoutProfile.setVisibility(View.VISIBLE);
+                    layoutEditButton.setVisibility(View.GONE);
                     EdtState = 1;
                 }else if (EdtState ==1 ){
                     linearLayoutProfile.setVisibility(View.GONE);
+                    layoutEditButton.setVisibility(View.VISIBLE);
                     EdtState = 0;
                 }
             }
@@ -170,12 +190,14 @@ private View root;
                 if (task.isSuccessful()){
 
                     showSnackBarOnline(getContext(),"Saved changes..");
-                    if (EdtState == 1){
-                        linearLayoutProfile.setVisibility(View.GONE);
-                        EdtState =0;
-                    }else if (EdtState == 0){
+                    if (EdtState == 0){
                         linearLayoutProfile.setVisibility(View.VISIBLE);
-                        EdtState =1;
+                        layoutEditButton.setVisibility(View.GONE);
+                        EdtState = 1;
+                    }else if (EdtState ==1 ){
+                        linearLayoutProfile.setVisibility(View.GONE);
+                        layoutEditButton.setVisibility(View.VISIBLE);
+                        EdtState = 0;
                     }
 
                 }else {
@@ -209,7 +231,8 @@ private View root;
 
     private void FetchProduct() {
 
-            Query query = CurrentJobRef.whereEqualTo("User_ID",mAuth.getCurrentUser().getUid())
+            Query query =  TopFindRef.document(mAuth.getCurrentUser().getUid())
+                    .collection("Current_clients")
                     .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
             FirestoreRecyclerOptions<CurrentJobs> transaction = new FirestoreRecyclerOptions.Builder<CurrentJobs>()
                     .setQuery(query, CurrentJobs.class)

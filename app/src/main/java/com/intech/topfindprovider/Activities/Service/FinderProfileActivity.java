@@ -50,7 +50,7 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FinderProfileActivity extends AppCompatActivity {
-    private TextView UserName,Email,Phone,Location,logout;
+    private TextView UserName,Email,Phone,Location,logout,closeEdit;
     private CircleImageView ProfileImage;
     private EditText EditUserName,EditEmail,EditPhone,EditLocation;
     private FirebaseAuth mAuth;
@@ -61,7 +61,7 @@ public class FinderProfileActivity extends AppCompatActivity {
     private CurrentJobsAdapter adapter;
     private FloatingActionButton editBtn;
     private int editState = 0;
-    private LinearLayout editLayout,primeLayout;
+    private LinearLayout editLayout,primeLayout,editButton;
     private Button BtnSaveChanges;
 
     @Override
@@ -92,8 +92,29 @@ public class FinderProfileActivity extends AppCompatActivity {
         editLayout = findViewById(R.id.EditView);
         primeLayout = findViewById(R.id.PrimeView);
         BtnSaveChanges = findViewById(R.id.edit_Tf_saveChanges);
+        closeEdit = findViewById(R.id.closeEdit);
+        editButton = findViewById(R.id.editLayout);
 
 
+
+
+
+        closeEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editState == 1){
+                    primeLayout.setVisibility(View.GONE);
+                    editLayout.setVisibility(View.VISIBLE);
+                    editButton.setVisibility(View.GONE);
+                    editState =0;
+                }else if (editState == 0){
+                    primeLayout.setVisibility(View.VISIBLE);
+                    editLayout.setVisibility(View.GONE);
+                    editButton.setVisibility(View.VISIBLE);
+                    editState =1;
+                }
+            }
+        });
         BtnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,10 +133,12 @@ public class FinderProfileActivity extends AppCompatActivity {
                 if (editState == 0){
                     primeLayout.setVisibility(View.GONE);
                     editLayout.setVisibility(View.VISIBLE);
+                    editButton.setVisibility(View.GONE);
                     editState =1;
                 }else if (editState == 1){
                     primeLayout.setVisibility(View.VISIBLE);
                     editLayout.setVisibility(View.GONE);
+                    editButton.setVisibility(View.VISIBLE);
                     editState =0;
                 }
             }
