@@ -282,7 +282,7 @@ public class FinderProfileActivity extends AppCompatActivity {
 
     }
 
-        private AlertDialog dialog2;
+    private AlertDialog dialog2;
     public void Logout_Alert() {
 
         Date currentTime = Calendar.getInstance().getTime();

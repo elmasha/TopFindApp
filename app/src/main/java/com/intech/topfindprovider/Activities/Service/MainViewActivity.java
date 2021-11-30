@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +54,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.intech.topfindprovider.Adapters.CategoryAdapter;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
 import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
+import com.intech.topfindprovider.Fragments.Service.MyJobsFragment;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.Category;
 import com.intech.topfindprovider.Models.TopFindProviders;
@@ -59,6 +62,8 @@ import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -124,25 +129,67 @@ public class MainViewActivity extends AppCompatActivity {
         imageViewNotify = findViewById(R.id.Notification);
 
 
-        dl = (DrawerLayout) findViewById(R.id.drawerMenu);
+        dl = (DrawerLayout) findViewById(R.id.drawer);
 //        dl.closeDrawer(GravityCompat.END);
 
 
-        nv = (NavigationView) findViewById(R.id.nv);
+        nv = (NavigationView) findViewById(R.id.navigation_menu);
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 switch (id) {
-                    case R.id.account:
-                        Toast.makeText(MainViewActivity.this, "My Account", Toast.LENGTH_SHORT).show();
+                    case R.id.account:if (dl.isDrawerOpen(GravityCompat.START)){
+                        dl.closeDrawer(GravityCompat.START);
+                    }
+
+                        startActivity(new Intent(getApplicationContext(), FinderProfileActivity.class));
                         break;
                     case R.id.myJobs:
-                        Toast.makeText(MainViewActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                        if (dl.isDrawerOpen(GravityCompat.START)){
+                            dl.closeDrawer(GravityCompat.START);
+                        }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.Frame_main,
+                                new MyJobsFragment()).commit();
                         break;
-                    case R.id.mycart:
+                    case R.id.notification:
+
+                        if (dl.isDrawerOpen(GravityCompat.START)){
+                            dl.closeDrawer(GravityCompat.START);
+                        }
+                        if (NotifyState == 0){
+                            getSupportFragmentManager().beginTransaction().replace(R.id.Frame_main,
+                                    new FinderNotificationFragment()).commit();
+                            NotifyState = 1;
+                        }else if (NotifyState == 1){
+                            NotifyState = 0;
+                            if(getSupportFragmentManager().findFragmentById(R.id.Frame_main) != null) {
+                                getSupportFragmentManager()
+                                        .beginTransaction().
+                                        remove(getSupportFragmentManager().findFragmentById(R.id.Frame_main)).commit();
+                            }
+
+                        }
+                        break;
+                    case R.id.share:
+                        if (dl.isDrawerOpen(GravityCompat.START)){
+                            dl.closeDrawer(GravityCompat.START);
+                        }
                         Toast.makeText(MainViewActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
                         break;
+                    case R.id.refer:
+                        if (dl.isDrawerOpen(GravityCompat.START)){
+                            dl.closeDrawer(GravityCompat.START);
+                        }
+                        Toast.makeText(MainViewActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.logOut:
+                        if (dl.isDrawerOpen(GravityCompat.START)){
+                            dl.closeDrawer(GravityCompat.START);
+                        }
+                        Logout_Alert();
+                        break;
+
                     default:
                         return true;
                 }
@@ -152,12 +199,6 @@ public class MainViewActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
-
 
 
         imageViewNotify.setOnClickListener(new View.OnClickListener() {
@@ -235,6 +276,67 @@ public class MainViewActivity extends AppCompatActivity {
         });
 
         FetchProduct();
+
+    }
+
+
+
+    private android.app.AlertDialog dialog2;
+    public void Logout_Alert() {
+
+        Date currentTime = Calendar.getInstance().getTime();
+        String date = DateFormat.format("dd MMM ,yyyy | hh:mm a",new Date(String.valueOf(currentTime))).toString();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        dialog2 = builder.create();
+        dialog2.show();
+        builder.setMessage("Are you sure to Log out..\n");
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Log_out();
+
+                    }
+                });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog2.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+
+    void Log_out(){
+
+        String User_ID = mAuth.getCurrentUser().getUid();
+
+        HashMap<String,Object> store = new HashMap<>();
+        store.put("device_token", FieldValue.delete());
+
+        TopFindRef.document(User_ID).update(store).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()){
+
+                    mAuth.signOut();
+                    Intent logout = new Intent(getApplicationContext(), MainActivity.class);
+                    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(logout);
+                    dialog2.dismiss();
+
+
+                }else {
+
+                    ToastBack( task.getException().getMessage());
+
+                }
+
+            }
+        });
 
     }
 

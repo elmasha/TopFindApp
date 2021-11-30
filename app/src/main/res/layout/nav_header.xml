@@ -3,13 +3,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
     android:background="@color/primary">
-    <ImageView
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/user"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:textSize="30dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:text="TopFind"/>
 
 </LinearLayout>

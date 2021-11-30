@@ -431,6 +431,7 @@
                 <FrameLayout
                     android:id="@+id/FrameProfile"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_marginBottom="5dp"
                     android:layout_height="160dp">
                     <androidx.recyclerview.widget.RecyclerView
