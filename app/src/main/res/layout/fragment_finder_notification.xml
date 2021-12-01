@@ -7,6 +7,16 @@
     tools:context=".Fragments.Service.FinderNotificationFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <View
+        android:id="@+id/CloseNotify"
+        android:layout_width="50dp"
+        android:layout_margin="14dp"
+        android:padding="10dp"
+        android:background="@color/lightGrey"
+        android:layout_centerHorizontal="true"
+        android:layout_height="3dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"

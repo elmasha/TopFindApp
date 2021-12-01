@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
         holder.Name.setText(model.getUser_name());
         holder.location.setText(model.getLocation());
         holder.category.setText(model.getCategory());
+        holder.ratingBar.setRating(Float.parseFloat(model.getRating()+""));
 
         if(context != null | model.getProfile_image() != null) {
             Picasso.with(context).load(model.getProfile_image())
@@ -63,6 +65,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
     class CurrentJobsViewHolder extends RecyclerView.ViewHolder{
        private TextView Name, location,category;
        private CircleImageView profile;
+       private RatingBar ratingBar;
        private View view;
 
         public CurrentJobsViewHolder(@NonNull View itemView) {
@@ -72,6 +75,7 @@ public class CurrentJobsAdapter extends FirestoreRecyclerAdapter<CurrentJobs, Cu
             profile = itemView.findViewById(R.id.current_row_image);
             location = itemView.findViewById(R.id.current_row_location);
             category = itemView.findViewById(R.id.current_row_category);
+            ratingBar = itemView.findViewById(R.id.current_ratingBarShop);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

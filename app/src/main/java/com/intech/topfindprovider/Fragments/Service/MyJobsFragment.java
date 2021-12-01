@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -38,6 +40,7 @@ View root;
     private int editState = 0;
     private LinearLayout editLayout,primeLayout,editButton;
     private Button BtnSaveChanges;
+    private View CloseActive;
 
     public MyJobsFragment() {
         // Required empty public constructor
@@ -57,6 +60,17 @@ View root;
        root = inflater.inflate(R.layout.fragment_my_jobs, container, false);
        mAuth = FirebaseAuth.getInstance();
         recyclerViewJobs= root.findViewById(R.id.recycler_active_jobs2);
+        CloseActive = root.findViewById(R.id.CloseActive);
+
+        CloseActive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity().getSupportFragmentManager().findFragmentById(R.id.Frame_main) != null) {
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction().remove(getActivity().getSupportFragmentManager().findFragmentById(R.id.Frame_main)).commit();
+                }
+            }
+        });
 
         return root;
     }
@@ -78,7 +92,7 @@ View root;
         recyclerViewJobs.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewJobs.setLayoutManager(LayoutManager);
+        recyclerViewJobs.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerViewJobs.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new CurrentJobsAdapter.OnItemCickListener() {

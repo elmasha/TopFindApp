@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,11 +54,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.intech.topfindprovider.Adapters.CategoryAdapter;
+import com.intech.topfindprovider.Adapters.CountyAdapter;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
 import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
 import com.intech.topfindprovider.Fragments.Service.MyJobsFragment;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.Category;
+import com.intech.topfindprovider.Models.Counties;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
@@ -76,21 +80,26 @@ public class MainViewActivity extends AppCompatActivity {
     CollectionReference TopFindProRef = db.collection("TopFind_Provider");
     CollectionReference FindRequestRef = db.collection("TopFind_Request");
     CollectionReference CategoryRef = db.collection("Category");
+    CollectionReference CountyRef = db.collection("County");
 
     private CircleImageView profileImage;
 
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private FrameLayout catLayout;
-    private LinearLayout linearLayoutSearch;
+    private LinearLayout linearLayoutSearch,linearLayoutFilter;
     private ProvidersAdapter adapter;
     private CategoryAdapter categoryAdapter;
-    private RecyclerView mRecyclerView,mRecyclerView2,recyclerViewPost;
+    private CountyAdapter countyAdapter;
+    private RecyclerView mRecyclerView,mRecyclerView2,recyclerViewPost,recyclerCounty;
     private TextView chooseCat,SearchCategory;
     private String Category = "";
+    private String  County = "";
     private FloatingActionButton SearchCat,postJob;
     private RelativeLayout relativeLayout;
     private ImageView imageViewNotify;
+    private RatingBar ratingBarFilter;
+    private long Rating;
 
 
     private int dropDownState = 0;
@@ -100,6 +109,7 @@ public class MainViewActivity extends AppCompatActivity {
         super.onStart();
         FetchProduct();
         FetchCategory();
+        FetchCounty();
         LoadDetails();
     }
 
@@ -108,6 +118,7 @@ public class MainViewActivity extends AppCompatActivity {
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
+    private int FilterState = 0;
 
 
     @Override
@@ -126,7 +137,46 @@ public class MainViewActivity extends AppCompatActivity {
         SearchCategory = findViewById(R.id.searchCat);
         linearLayoutSearch = findViewById(R.id.SearchLayout);
         relativeLayout = findViewById(R.id.relative);
+        recyclerCounty = findViewById(R.id.recycler_county);
         imageViewNotify = findViewById(R.id.Notification);
+        ratingBarFilter = findViewById(R.id.ratingBarFilter);
+
+
+        linearLayoutFilter = findViewById(R.id.Filter);
+
+
+        ratingBarFilter.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+                ratingBarFilter.setRating(rating);
+
+                ToastBack(rating+"");
+            }});
+        ratingBarFilter.refreshDrawableState();
+
+
+
+//        ratingBarFilter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Rating = ratingBarFilter.getNumStars();
+//                ToastBack(Rating+"");
+//            }
+//        });
+
+        linearLayoutFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (FilterState == 0){
+                    catLayout.setVisibility(View.VISIBLE);
+                    FilterState =1;
+                }else if (FilterState ==1){
+                    catLayout.setVisibility(View.GONE);
+                    FilterState=0;
+                }
+            }
+        });
 
 
         dl = (DrawerLayout) findViewById(R.id.drawer);
@@ -235,7 +285,7 @@ public class MainViewActivity extends AppCompatActivity {
         SearchCat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Category != null){
+                if (Category != null | County != null){
                     FetchProduct();
                 }
 
@@ -250,8 +300,10 @@ public class MainViewActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 Category = "";
+                County = "";
                 chooseCat.setText("Select category");
                 FetchCategory();
+                FetchCounty();
                 FetchProduct();
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -347,7 +399,6 @@ public class MainViewActivity extends AppCompatActivity {
     private String inputText,pickedCat;
     private Button BtnPost;
     private ProgressBar progressBar;
-
     private void PostJobDialog(){
         final  AlertDialog.Builder mbuilder = new AlertDialog.Builder(this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_post_job, null);
@@ -428,7 +479,6 @@ public class MainViewActivity extends AppCompatActivity {
     private CircleImageView ReQuestImage;
     private LinearLayout google,facebook;
     private ProgressBar progressBarMpesa;
-
     private void RequestDialog(){
         final  AlertDialog.Builder mbuilder = new AlertDialog.Builder(this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_send_request, null);
@@ -521,6 +571,32 @@ public class MainViewActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private void FetchCounty() {
+        Query query = CountyRef.orderBy("no",Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<Counties> transaction = new FirestoreRecyclerOptions.Builder<Counties>()
+                .setQuery(query, Counties.class)
+                .setLifecycleOwner(this)
+                .build();
+        countyAdapter = new CountyAdapter(transaction);
+        recyclerCounty.setHasFixedSize(true);
+        recyclerCounty.setNestedScrollingEnabled(false);
+        LinearLayoutManager LayoutManager
+                = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerCounty.setLayoutManager(LayoutManager);
+        recyclerCounty.setAdapter(countyAdapter);
+        countyAdapter.setOnItemClickListener(new CountyAdapter.OnItemCickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Counties counties = documentSnapshot.toObject(Counties.class);
+                County = counties.getCounty();
+            }
+        });
+
+    }
+
+
     private void FetchCategory() {
 
         FirestoreRecyclerOptions<Category> transaction = new FirestoreRecyclerOptions.Builder<Category>()
@@ -539,10 +615,6 @@ public class MainViewActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Category category = documentSnapshot.toObject(Category.class);
                 Category = category.getCategory();
-                if (Category != null){
-                    FetchProduct();
-                }
-
             }
         });
 
@@ -581,10 +653,10 @@ public class MainViewActivity extends AppCompatActivity {
 
                 }
             });
-        }else if (Category != null){
-
+        }else if (Category != null |County != null){
 
             Query query = TopFindProRef.whereEqualTo("Profession",Category)
+                    .whereEqualTo("location",County)
                     .orderBy("date_registered", Query.Direction.DESCENDING).limit(30);
             FirestoreRecyclerOptions<TopFindProviders> transaction = new FirestoreRecyclerOptions.Builder<TopFindProviders>()
                     .setQuery(query, TopFindProviders.class)
@@ -614,6 +686,8 @@ public class MainViewActivity extends AppCompatActivity {
                 }
             });
 
+        }else {
+            ToastBack("Select all categories ");
         }
 
 

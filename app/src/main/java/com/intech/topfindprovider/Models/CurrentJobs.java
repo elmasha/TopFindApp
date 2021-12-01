@@ -5,13 +5,14 @@ import java.util.Date;
 public class CurrentJobs {
   private String User_name,Email,Phone,location,User_ID,Profile_image,job_ID,Category;
   private Date timestamp;
+  private long Rating;
 
     public CurrentJobs() {
         //...Empty
     }
 
     public CurrentJobs(String user_name, String email, String phone,
-                       String location, String user_ID, String profile_image, String job_ID, String category, Date timestamp) {
+                       String location, String user_ID, String profile_image, String job_ID, String category, Date timestamp, long rating) {
         User_name = user_name;
         Email = email;
         Phone = phone;
@@ -21,6 +22,11 @@ public class CurrentJobs {
         this.job_ID = job_ID;
         Category = category;
         this.timestamp = timestamp;
+        Rating = rating;
+    }
+
+    public long getRating() {
+        return Rating;
     }
 
     public String getCategory() {

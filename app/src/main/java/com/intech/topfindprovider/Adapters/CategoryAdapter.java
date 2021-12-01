@@ -72,14 +72,15 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemView.setBackgroundResource(R.drawable.border_green);
-                    viewOn.setVisibility(View.VISIBLE);
-                    title.setTextColor(Color.parseColor("#2BB66A"));
+
                     int position = getAdapterPosition();
+
+                        itemView.setBackgroundResource(R.drawable.border_green);
+                        viewOn.setVisibility(View.VISIBLE);
+                        title.setTextColor(Color.parseColor("#2BB66A"));
 
                     if (position != RecyclerView.NO_POSITION && listener != null){
                         listener.onItemClick(getSnapshots().getSnapshot(position),position);
-
 
                     }
                 }

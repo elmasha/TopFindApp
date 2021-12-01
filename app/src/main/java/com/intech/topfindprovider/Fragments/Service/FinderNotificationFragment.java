@@ -13,6 +13,7 @@ import com.intech.topfindprovider.R;
 
 public class FinderNotificationFragment extends Fragment {
 View root;
+    private View CloseNotify;
 
     public FinderNotificationFragment() {
         // Required empty public constructor
@@ -26,6 +27,17 @@ View root;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_finder_notification, container, false);
+        CloseNotify = root.findViewById(R.id.CloseNotify);
+
+        CloseNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity().getSupportFragmentManager().findFragmentById(R.id.Frame_main) != null) {
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction().remove(getActivity().getSupportFragmentManager().findFragmentById(R.id.Frame_main)).commit();
+                }
+            }
+        });
 
         return root;
     }
