@@ -3,16 +3,24 @@
 
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/account"
-            android:icon="@drawable/ic_person"
-            android:title="My Profile"/>
-        <item android:id="@+id/notification"
-            android:icon="@drawable/ic_notification"
-            android:title="Notification"/>
 
-        <item android:id="@+id/myJobs"
-            android:icon="@drawable/ic_groups_24"
-            android:title="My Jobs"/>
+        <item android:title="Account">
+            <menu>
+
+                <item android:id="@+id/account"
+                    android:icon="@drawable/ic_person"
+                    android:title="My Profile"/>
+                <item android:id="@+id/notification"
+                    android:icon="@drawable/ic_notification"
+                    android:title="Notification"/>
+
+                <item android:id="@+id/myJobs"
+                    android:icon="@drawable/ic_groups_24"
+                    android:title="My Jobs"/>
+            </menu>
+
+        </item>
+
     </group>
 
 
@@ -25,19 +33,14 @@
                 android:icon="@drawable/ic_share_24"
                 android:title="Share"/>
 
-
             <item android:id="@+id/refer"
                 android:icon="@drawable/ic_send_24"
                 android:title="Refer a friend"/>
         </menu>
 
-
-
     </item>
 
-
-
-    <item android:title="" >
+    <item android:title="Log out" >
 
         <menu>
             <item android:id="@+id/logOut"
@@ -49,12 +52,5 @@
 
 
     </item>
-
-
-
-
-
-
-
 
 </menu>

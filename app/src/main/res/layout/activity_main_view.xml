@@ -32,6 +32,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/drawerOpen"
+                        android:layout_width="wrap_content"
+                        android:drawableLeft="@drawable/ic_menu_32"
+                        android:layout_margin="10dp"
+                        android:paddingLeft="19dp"
+                        android:layout_height="wrap_content"/>
+
+
+
+
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -66,6 +78,7 @@
                     <ImageView
                         android:id="@+id/Notification"
                         android:layout_width="28dp"
+                        android:visibility="gone"
                         android:layout_alignParentRight="true"
                         android:layout_margin="10dp"
                         android:src="@drawable/notification"
@@ -129,32 +142,50 @@
 
 
 
-            <LinearLayout
-                android:id="@+id/Filter"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:src="@drawable/setting"
-                    android:padding="4dp"
-                    android:background="@drawable/btn_round_green"
-                    android:layout_height="36dp"/>
-                <TextView
-                    android:id="@+id/filter_category"
+
+
+                <LinearLayout
+                    android:id="@+id/Filter"
                     android:layout_width="wrap_content"
-                    android:text="Filter"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:layout_margin="5dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/secondary"
-                    android:layout_height="wrap_content"/>
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:src="@drawable/setting"
+                        android:padding="6dp"
+                        android:background="@drawable/btn_round_blue"
+                        android:layout_height="36dp"/>
+                    <TextView
+                        android:id="@+id/filter_category"
+                        android:layout_width="wrap_content"
+                        android:text="Search filter"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:layout_margin="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/secondary"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/CloseCat"
+                android:visibility="gone"
+                android:layout_margin="10dp"
+                android:layout_gravity="end"
+                android:drawableRight="@drawable/ic_close_40"
+                android:layout_height="wrap_content"/>
+
+
+
+
+
 
 
 
@@ -172,9 +203,25 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
+
+
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="Profession"
+                        android:text="Search filter"
+                        android:textStyle="bold"
+                        android:drawableLeft="@drawable/ic_earch"
+                        android:drawableTint="@color/secondary"
+                        android:textSize="20dp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/secondary"
+                        android:layout_margin="4dp"
+                        android:layout_height="wrap_content"/>
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Choose a profession"
                         android:textStyle="bold"
                         android:textSize="17dp"
                         android:textColor="@color/primary"
@@ -191,7 +238,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="County"
+                        android:text="Select county"
                         android:textStyle="bold"
                         android:textSize="17dp"
                         android:textColor="@color/primary"
@@ -245,27 +292,49 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_gravity="end"
+                        android:layout_margin="10dp"
+                        android:padding="4dp"
+                        android:layout_gravity="center"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="Apply Filter"
-                            android:textSize="17dp"
-                            android:layout_gravity="center"
-                            android:textStyle="bold"
-                            android:textColor="@color/secondary"
-                            android:layout_height="wrap_content"/>
 
-                        <com.getbase.floatingactionbutton.FloatingActionButton
-                            android:id="@+id/SearchCategory"
+
+                        <LinearLayout
+                            android:id="@+id/ClearAll"
                             android:layout_width="wrap_content"
-                            app:fab_size="mini"
-                            app:fab_colorNormal="@color/secondary"
-                            app:fab_colorPressed="@color/primary"
-                            app:fab_icon="@drawable/ic_earch"
-                            android:layout_height="wrap_content"/>
+                            android:layout_gravity="center"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Clear all"
+                                android:textSize="19dp"
+                                android:textStyle="bold"
+                                android:textColor="@color/secondary"
+                                android:layout_height="wrap_content"/>
+
+                            <ImageView
+                                android:layout_marginStart="8dp"
+                                android:layout_width="24dp"
+                                android:src="@drawable/clear"
+                                android:layout_height="24dp"/>
+
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/SearchCategory"
+                            android:layout_width="160dp"
+                            android:textColor="@color/primary"
+                            android:textAllCaps="false"
+                            android:textStyle="bold"
+                            android:layout_marginStart="20dp"
+                            android:textSize="16dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_round_blue"
+                            android:text="Apply Filter"/>
+
+
+
+
 
 
 

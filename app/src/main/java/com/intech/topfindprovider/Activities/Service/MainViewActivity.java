@@ -87,15 +87,16 @@ public class MainViewActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private FrameLayout catLayout;
-    private LinearLayout linearLayoutSearch,linearLayoutFilter;
+    private LinearLayout linearLayoutSearch,linearLayoutFilter,ClearAll;
     private ProvidersAdapter adapter;
     private CategoryAdapter categoryAdapter;
     private CountyAdapter countyAdapter;
     private RecyclerView mRecyclerView,mRecyclerView2,recyclerViewPost,recyclerCounty;
-    private TextView chooseCat,SearchCategory;
+    private TextView chooseCat,SearchCategory,OpenDrawer,closeFilter;
     private String Category = "";
     private String  County = "";
-    private FloatingActionButton SearchCat,postJob;
+    private FloatingActionButton postJob;
+    private Button SearchCat;
     private RelativeLayout relativeLayout;
     private ImageView imageViewNotify;
     private RatingBar ratingBarFilter;
@@ -140,6 +141,45 @@ public class MainViewActivity extends AppCompatActivity {
         recyclerCounty = findViewById(R.id.recycler_county);
         imageViewNotify = findViewById(R.id.Notification);
         ratingBarFilter = findViewById(R.id.ratingBarFilter);
+        OpenDrawer = findViewById(R.id.drawerOpen);
+        closeFilter = findViewById(R.id.CloseCat);
+        ClearAll = findViewById(R.id.ClearAll);
+
+
+
+        ClearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Category = "";
+                County = "";
+                FetchCategory();
+                FetchCounty();
+                FetchProduct();
+            }
+        });
+
+        closeFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (FilterState == 1){
+                    catLayout.setVisibility(View.GONE);
+                    linearLayoutFilter.setVisibility(View.VISIBLE);
+                    closeFilter.setVisibility(View.GONE);
+                    FilterState =0;
+                }
+            }
+        });
+
+        OpenDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!dl.isDrawerVisible(GravityCompat.START)){
+                    dl.openDrawer(GravityCompat.START);
+                }else if (dl.isDrawerVisible(GravityCompat.START)){
+                    dl.closeDrawer(GravityCompat.START);
+                }
+            }
+        });
 
 
         linearLayoutFilter = findViewById(R.id.Filter);
@@ -170,9 +210,13 @@ public class MainViewActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (FilterState == 0){
                     catLayout.setVisibility(View.VISIBLE);
+                    linearLayoutFilter.setVisibility(View.GONE);
+                    closeFilter.setVisibility(View.VISIBLE);
                     FilterState =1;
                 }else if (FilterState ==1){
                     catLayout.setVisibility(View.GONE);
+                    linearLayoutFilter.setVisibility(View.VISIBLE);
+                    closeFilter.setVisibility(View.GONE);
                     FilterState=0;
                 }
             }
