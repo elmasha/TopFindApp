@@ -113,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                         }else {
                             showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                             progressDialog.dismiss();
+
                         }
                     }
                 });
@@ -140,6 +141,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                     progressDialog.dismiss();
+                    if (task.getException().getMessage().equals("NOT_FOUND: NO document to update")){
+                        showSnackBackOffline(getBaseContext(),"Account doesn't exist");
+                    }
 
                 }
             }
