@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TopFindProvider</string>
 
+    <string name="default_notification_channel_id">InTech_CH_01</string>
 
     <string-array name="experience">
         <item>Select experience</item>

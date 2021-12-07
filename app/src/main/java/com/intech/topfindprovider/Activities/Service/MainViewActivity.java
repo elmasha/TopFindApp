@@ -803,6 +803,7 @@ public class MainViewActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
+                    Notify(id);
                     if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
                     if (dialog_postJob != null)dialog_postJob.dismiss();
 
@@ -846,16 +847,28 @@ public class MainViewActivity extends AppCompatActivity {
         notify.put("from",mAuth.getCurrentUser().getUid());
         notify.put("timestamp",FieldValue.serverTimestamp());
 
-        TopFindProRef.document(id).collection("Notifications")
-                .document().set(notify).addOnCompleteListener(new OnCompleteListener<Void>() {
+        TopFindRef.document(id).collection("Notifications")
+                .document().set(notify)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    snackbar.dismiss();
+                if(task.isSuccessful()){
+                    TopFindProRef.document(id).collection("Notifications")
+                            .document().set(notify).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                snackbar.dismiss();
+                            }else {
+                                ToastBack(task.getException().getMessage());
+                                if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                                if (dialog_postJob != null)dialog_postJob.dismiss();
+                            }
+                        }
+                    });
+
                 }else {
-                    ToastBack(task.getException().getMessage());
-                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
-                    if (dialog_postJob != null)dialog_postJob.dismiss();
+
                 }
             }
         });

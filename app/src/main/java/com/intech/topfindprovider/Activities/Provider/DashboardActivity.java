@@ -27,8 +27,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.intech.topfindprovider.Activities.Service.FinderProfileActivity;
-import com.intech.topfindprovider.Activities.Service.MainViewActivity;
 import com.intech.topfindprovider.Fragments.Provider.ProviderJobsFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderNotificationFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderProfileFragment;
