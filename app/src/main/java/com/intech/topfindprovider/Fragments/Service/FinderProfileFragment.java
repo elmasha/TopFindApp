@@ -1,18 +1,21 @@
-package com.intech.topfindprovider.Activities.Service;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.intech.topfindprovider.Fragments.Service;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.format.DateFormat;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,10 +38,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.intech.topfindprovider.Activities.Service.ViewRequestActivity;
 import com.intech.topfindprovider.Adapters.CurrentJobsAdapter;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.CurrentJobs;
-import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
 import com.squareup.picasso.Picasso;
@@ -49,7 +52,8 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FinderProfileActivity extends AppCompatActivity {
+public class FinderProfileFragment extends Fragment {
+View root;
     private TextView UserName,Email,Phone,Location,logout,closeEdit;
     private CircleImageView ProfileImage;
     private EditText EditUserName,EditEmail,EditPhone,EditLocation;
@@ -63,40 +67,41 @@ public class FinderProfileActivity extends AppCompatActivity {
     private int editState = 0;
     private LinearLayout editLayout,primeLayout,editButton;
     private Button BtnSaveChanges;
+    public FinderProfileFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         FetchProduct();
         LoadDetails();
     }
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_finder_profile);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        root = inflater.inflate(R.layout.fragment_finder_profile, container, false);
         mAuth = FirebaseAuth.getInstance();
-        UserName = findViewById(R.id.Tf_name);
-        Email = findViewById(R.id.Tf_email);
-        Phone = findViewById(R.id.Tf_phone);
-        Location = findViewById(R.id.Tf_location);
-        ProfileImage = findViewById(R.id.Tf_userImage);
-        logout = findViewById(R.id.LogOut);
-        recyclerViewJobs= findViewById(R.id.recycler_active_jobs);
-        EditEmail = findViewById(R.id.edit_Tf_email);
-        EditUserName = findViewById(R.id.edit_Tf_name);
-        EditPhone = findViewById(R.id.edit_Tf_phone);
-        EditLocation = findViewById(R.id.edit_Tf_location);
-        editBtn = findViewById(R.id.edit_Tf_profile);
-        editLayout = findViewById(R.id.EditView);
-        primeLayout = findViewById(R.id.PrimeView);
-        BtnSaveChanges = findViewById(R.id.edit_Tf_saveChanges);
-        closeEdit = findViewById(R.id.closeEdit);
-        editButton = findViewById(R.id.editLayout);
-
-
-
+        UserName = root.findViewById(R.id.Tf_name);
+        Email = root.findViewById(R.id.Tf_email);
+        Phone = root.findViewById(R.id.Tf_phone);
+        Location = root.findViewById(R.id.Tf_location);
+        ProfileImage = root.findViewById(R.id.Tf_userImage);
+        logout = root.findViewById(R.id.LogOut);
+        recyclerViewJobs= root.findViewById(R.id.recycler_active_jobs);
+        EditEmail = root.findViewById(R.id.edit_Tf_email);
+        EditUserName = root.findViewById(R.id.edit_Tf_name);
+        EditPhone = root.findViewById(R.id.edit_Tf_phone);
+        EditLocation = root.findViewById(R.id.edit_Tf_location);
+        editBtn = root.findViewById(R.id.edit_Tf_profile);
+        editLayout = root.findViewById(R.id.EditView);
+        primeLayout = root.findViewById(R.id.PrimeView);
+        BtnSaveChanges = root.findViewById(R.id.edit_Tf_saveChanges);
+        closeEdit = root.findViewById(R.id.closeEdit);
+        editButton = root.findViewById(R.id.editLayout);
 
 
         closeEdit.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +157,12 @@ public class FinderProfileActivity extends AppCompatActivity {
                 Logout_Alert();
             }
         });
+
+
+        return root;
     }
+
+
 
     private void SaveChanges() {
 
@@ -170,7 +180,7 @@ public class FinderProfileActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()){
 
-                   showSnackBarOnline(getBaseContext(),"Saved changes..");
+                    showSnackBarOnline(getContext(),"Saved changes..");
                     if (editState == 0){
                         primeLayout.setVisibility(View.GONE);
                         editLayout.setVisibility(View.VISIBLE);
@@ -183,7 +193,7 @@ public class FinderProfileActivity extends AppCompatActivity {
 
                 }else {
 
-                   showSnackBackOffline(getBaseContext(),task.getException().getMessage());
+                    showSnackBackOffline(getContext(),task.getException().getMessage());
 
 
                 }
@@ -228,8 +238,8 @@ public class FinderProfileActivity extends AppCompatActivity {
         Query query =
                 TopFindRef.document(mAuth.getCurrentUser().getUid())
                         .collection("Current_workers")
-                .whereEqualTo("job_ID",mAuth.getCurrentUser().getUid())
-                .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
+                        .whereEqualTo("job_ID",mAuth.getCurrentUser().getUid())
+                        .orderBy("timestamp", Query.Direction.DESCENDING).limit(30);
         FirestoreRecyclerOptions<CurrentJobs> transaction = new FirestoreRecyclerOptions.Builder<CurrentJobs>()
                 .setQuery(query, CurrentJobs.class)
                 .setLifecycleOwner(this)
@@ -238,21 +248,21 @@ public class FinderProfileActivity extends AppCompatActivity {
         recyclerViewJobs.setHasFixedSize(true);
         recyclerViewJobs.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewJobs.setLayoutManager(LayoutManager);
         recyclerViewJobs.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new CurrentJobsAdapter.OnItemCickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                   CurrentJobs  topFindProviders = documentSnapshot.toObject(CurrentJobs.class);
+                CurrentJobs  topFindProviders = documentSnapshot.toObject(CurrentJobs.class);
 
-                   String UID = topFindProviders.getUser_ID();
-                   if (UID != null){
-                       Intent intent = new Intent(getApplicationContext(),ViewRequestActivity.class);
-                       intent.putExtra("ID",UID);
-                       startActivity(intent);
-                   }
+                String UID = topFindProviders.getUser_ID();
+                if (UID != null){
+                    Intent intent = new Intent(getContext(), ViewRequestActivity.class);
+                    intent.putExtra("ID",UID);
+                    startActivity(intent);
+                }
 
 
             }
@@ -267,7 +277,7 @@ public class FinderProfileActivity extends AppCompatActivity {
 
     //----InterNet Connection----
     public void showSnackBackOffline(Context context, String msg) {
-        Snackbar.with(this,null).type(Type.ERROR).message(msg)
+        Snackbar.with(getContext(),null).type(Type.ERROR).message(msg)
                 .duration(Duration.LONG)
                 .fillParent(true)
                 .textAlign(Align.CENTER).show();
@@ -275,7 +285,7 @@ public class FinderProfileActivity extends AppCompatActivity {
 
     public void showSnackBarOnline(Context context,String msg) {
 
-        Snackbar.with(this, null).type(Type.SUCCESS).message(msg)
+        Snackbar.with(getContext(), null).type(Type.SUCCESS).message(msg)
                 .duration(Duration.LONG)
                 .fillParent(true)
                 .textAlign(Align.CENTER).show();
@@ -288,7 +298,7 @@ public class FinderProfileActivity extends AppCompatActivity {
         Date currentTime = Calendar.getInstance().getTime();
         String date = DateFormat.format("dd MMM ,yyyy | hh:mm a",new Date(String.valueOf(currentTime))).toString();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog2 = builder.create();
         dialog2.show();
         builder.setMessage("Are you sure to Log out..\n");
@@ -324,7 +334,7 @@ public class FinderProfileActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
 
                     mAuth.signOut();
-                    Intent logout = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent logout = new Intent(getContext(), MainActivity.class);
                     logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(logout);
                     dialog2.dismiss();
@@ -369,7 +379,7 @@ public class FinderProfileActivity extends AppCompatActivity {
                     EditLocation.setText(location);
 
                     if (userImage != null){
-                        Picasso.with(getApplicationContext())
+                        Picasso.with(getContext())
                                 .load(userImage).placeholder(R.drawable.user)
                                 .error(R.drawable.user)
                                 .into(ProfileImage);
@@ -390,10 +400,8 @@ public class FinderProfileActivity extends AppCompatActivity {
     private void ToastBack(String message){
 
 
-        backToast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        backToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
 
         backToast.show();
     }
-
-
 }

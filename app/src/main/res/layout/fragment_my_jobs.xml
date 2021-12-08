@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
+        <TextView
             android:id="@+id/CloseActive"
-            android:layout_width="50dp"
-            android:layout_height="3dp"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
             android:layout_centerHorizontal="true"
-            android:layout_margin="14dp"
-            android:background="@color/lightGrey"
-            android:padding="10dp" />
+            android:layout_margin="3dp"
+            android:background="@drawable/minimize"
+             />
 
 
         <TextView
@@ -28,8 +28,9 @@
             android:layout_below="@id/CloseActive"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
+            android:textStyle="bold"
             android:text="Active workers"
-            android:textColor="@color/primary"
+            android:textColor="@color/secondary"
             android:textSize="19dp" />
 
 

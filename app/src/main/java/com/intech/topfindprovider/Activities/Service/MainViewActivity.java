@@ -9,34 +9,30 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chootdev.csnackbar.Align;
-import com.chootdev.csnackbar.Duration;
-import com.chootdev.csnackbar.Type;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,6 +53,7 @@ import com.intech.topfindprovider.Adapters.CategoryAdapter;
 import com.intech.topfindprovider.Adapters.CountyAdapter;
 import com.intech.topfindprovider.Adapters.ProvidersAdapter;
 import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
+import com.intech.topfindprovider.Fragments.Service.FinderProfileFragment;
 import com.intech.topfindprovider.Fragments.Service.MyJobsFragment;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.Category;
@@ -86,20 +83,20 @@ public class MainViewActivity extends AppCompatActivity {
 
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private FrameLayout catLayout;
+    private FrameLayout catLayout,countyLayout;
     private LinearLayout linearLayoutSearch,linearLayoutFilter,ClearAll;
     private ProvidersAdapter adapter;
     private CategoryAdapter categoryAdapter;
     private CountyAdapter countyAdapter;
-    private RecyclerView mRecyclerView,mRecyclerView2,recyclerViewPost,recyclerCounty;
-    private TextView chooseCat,SearchCategory,OpenDrawer,closeFilter;
+    private RecyclerView mRecyclerView, mRecyclerViewCategory,recyclerViewPost,recyclerCounty;
+    private TextView chooseCat,chooseCounty,SearchCategory,OpenDrawer,closeFilter;
     private String Category = "";
     private String  County = "";
     private FloatingActionButton postJob;
     private Button SearchCat;
     private RelativeLayout relativeLayout;
     private ImageView imageViewNotify;
-    private RatingBar ratingBarFilter;
+
     private long Rating;
 
 
@@ -120,6 +117,11 @@ public class MainViewActivity extends AppCompatActivity {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     private int FilterState = 0;
+    private int countyState = 0;
+    private RadioGroup radioGroup;
+    private long RatingSearch = 0;
+    private String SelectedExp;
+    private Spinner experienceSelect;
 
 
     @Override
@@ -131,7 +133,7 @@ public class MainViewActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.ProfilePicture);
         swipeRefreshLayout = findViewById(R.id.SwipeRefresh);
         mRecyclerView = findViewById(R.id.recycler_provider);
-        mRecyclerView2 = findViewById(R.id.recycler_category);
+        mRecyclerViewCategory = findViewById(R.id.recycler_category);
         chooseCat = findViewById(R.id.choose_category);
         catLayout = findViewById(R.id.FrameCategory);
         SearchCat = findViewById(R.id.SearchCategory);
@@ -140,10 +142,63 @@ public class MainViewActivity extends AppCompatActivity {
         relativeLayout = findViewById(R.id.relative);
         recyclerCounty = findViewById(R.id.recycler_county);
         imageViewNotify = findViewById(R.id.Notification);
-        ratingBarFilter = findViewById(R.id.ratingBarFilter);
         OpenDrawer = findViewById(R.id.drawerOpen);
         closeFilter = findViewById(R.id.CloseCat);
         ClearAll = findViewById(R.id.ClearAll);
+        chooseCounty = findViewById(R.id.choose_county);
+        countyLayout = findViewById(R.id.onCountyLayout);
+        radioGroup = findViewById(R.id.RadioGroupRating);
+        experienceSelect = findViewById(R.id.SelectExperience);
+
+
+        experienceSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    SelectedExp = experienceSelect.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.one:
+                       RatingSearch = 1;
+                        break;
+                    case R.id.two:
+                        RatingSearch = 2;
+                        break;
+                    case R.id.three:
+                        RatingSearch = 3;
+                        break;
+                    case R.id.four:
+                        RatingSearch = 4;
+                        break;
+                    case R.id.five:
+                        RatingSearch = 5;
+                        break;
+                }
+            }
+        });
+
+
+        chooseCounty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (countyState == 0){
+                    countyLayout.setVisibility(View.VISIBLE);
+                    countyState = 1;
+                }else if (countyState == 1){
+                    countyLayout.setVisibility(View.GONE);
+                    countyState=0;
+                }
+
+            }
+        });
 
 
 
@@ -152,6 +207,8 @@ public class MainViewActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Category = "";
                 County = "";
+                RatingSearch = 0;
+                SelectedExp = "";
                 FetchCategory();
                 FetchCounty();
                 FetchProduct();
@@ -185,15 +242,6 @@ public class MainViewActivity extends AppCompatActivity {
         linearLayoutFilter = findViewById(R.id.Filter);
 
 
-        ratingBarFilter.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-                ratingBarFilter.setRating(rating);
-
-                ToastBack(rating+"");
-            }});
-        ratingBarFilter.refreshDrawableState();
 
 
 
@@ -233,11 +281,12 @@ public class MainViewActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 switch (id) {
-                    case R.id.account:if (dl.isDrawerOpen(GravityCompat.START)){
+                    case R.id.account:
+                        if (dl.isDrawerOpen(GravityCompat.START)){
                         dl.closeDrawer(GravityCompat.START);
-                    }
-
-                        startActivity(new Intent(getApplicationContext(), FinderProfileActivity.class));
+                       }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.Frame_main,
+                                new FinderProfileFragment()).commit();
                         break;
                     case R.id.myJobs:
                         if (dl.isDrawerOpen(GravityCompat.START)){
@@ -329,6 +378,17 @@ public class MainViewActivity extends AppCompatActivity {
         SearchCat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (FilterState == 1){
+                    catLayout.setVisibility(View.VISIBLE);
+                    linearLayoutFilter.setVisibility(View.GONE);
+                    closeFilter.setVisibility(View.VISIBLE);
+                    FilterState =0;
+                }else if (FilterState ==0){
+                    catLayout.setVisibility(View.GONE);
+                    linearLayoutFilter.setVisibility(View.VISIBLE);
+                    closeFilter.setVisibility(View.GONE);
+                    FilterState=1;
+                }
                 if (Category != null | County != null){
                     FetchProduct();
                 }
@@ -345,6 +405,8 @@ public class MainViewActivity extends AppCompatActivity {
             public void onRefresh() {
                 Category = "";
                 County = "";
+                RatingSearch = 0;
+                SelectedExp = "";
                 chooseCat.setText("Select category");
                 FetchCategory();
                 FetchCounty();
@@ -595,7 +657,7 @@ public class MainViewActivity extends AppCompatActivity {
         recyclerViewPost.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
                 = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewPost.setLayoutManager(LayoutManager);
+        recyclerViewPost.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.HORIZONTAL));
         recyclerViewPost.setAdapter(categoryAdapter);
         categoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemCickListener() {
             @Override
@@ -618,7 +680,7 @@ public class MainViewActivity extends AppCompatActivity {
 
 
     private void FetchCounty() {
-        Query query = CountyRef.orderBy("no",Query.Direction.ASCENDING);
+        Query query = CountyRef.orderBy("county",Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Counties> transaction = new FirestoreRecyclerOptions.Builder<Counties>()
                 .setQuery(query, Counties.class)
                 .setLifecycleOwner(this)
@@ -628,7 +690,7 @@ public class MainViewActivity extends AppCompatActivity {
         recyclerCounty.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
                 = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerCounty.setLayoutManager(LayoutManager);
+        recyclerCounty.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.HORIZONTAL));
         recyclerCounty.setAdapter(countyAdapter);
         countyAdapter.setOnItemClickListener(new CountyAdapter.OnItemCickListener() {
             @Override
@@ -648,12 +710,12 @@ public class MainViewActivity extends AppCompatActivity {
                 .setLifecycleOwner(this)
                 .build();
         categoryAdapter = new CategoryAdapter(transaction);
-        mRecyclerView2.setHasFixedSize(true);
-        mRecyclerView2.setNestedScrollingEnabled(false);
+        mRecyclerViewCategory.setHasFixedSize(true);
+        mRecyclerViewCategory.setNestedScrollingEnabled(false);
         LinearLayoutManager LayoutManager
                 = new LinearLayoutManager(MainViewActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView2.setLayoutManager(LayoutManager);
-        mRecyclerView2.setAdapter(categoryAdapter);
+        mRecyclerViewCategory.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.HORIZONTAL));
+        mRecyclerViewCategory.setAdapter(categoryAdapter);
         categoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemCickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
@@ -701,6 +763,8 @@ public class MainViewActivity extends AppCompatActivity {
 
             Query query = TopFindProRef.whereEqualTo("Profession",Category)
                     .whereEqualTo("location",County)
+                    .whereEqualTo("ratings",RatingSearch)
+                    .whereEqualTo("Experience",SelectedExp)
                     .orderBy("date_registered", Query.Direction.DESCENDING).limit(30);
             FirestoreRecyclerOptions<TopFindProviders> transaction = new FirestoreRecyclerOptions.Builder<TopFindProviders>()
                     .setQuery(query, TopFindProviders.class)
@@ -811,7 +875,7 @@ public class MainViewActivity extends AppCompatActivity {
                     snackbar.setAction("NOTIFY", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Notify(id);
+                           // Notify(id);
                         }
                     });
 
@@ -841,14 +905,22 @@ public class MainViewActivity extends AppCompatActivity {
 
     private void Notify(String id){
         HashMap<String ,Object> notify = new HashMap<>();
-        notify.put("title","New Request");
-        notify.put("description","You have received new Request from "+FuserName);
+        notify.put("title","New job request");
+        notify.put("description","You have received new request from "+FuserName);
         notify.put("to",id);
         notify.put("from",mAuth.getCurrentUser().getUid());
         notify.put("timestamp",FieldValue.serverTimestamp());
 
-        TopFindRef.document(id).collection("Notifications")
-                .document().set(notify)
+        HashMap<String ,Object> notify2 = new HashMap<>();
+        notify2.put("title","New job request");
+        notify2.put("description","You have sent a job request to "+Requsername);
+        notify2.put("to",id);
+        notify2.put("from",mAuth.getCurrentUser().getUid());
+        notify2.put("timestamp",FieldValue.serverTimestamp());
+
+
+        TopFindRef.document(mAuth.getCurrentUser().getUid()).collection("Notifications")
+                .document().set(notify2)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
