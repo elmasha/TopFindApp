@@ -111,7 +111,6 @@
                         android:layout_width="wrap_content"
                         android:padding="2dp"
                         android:layout_gravity="center"
-                        android:drawableLeft="@drawable/ic_double_arrow_left_28"
                         android:layout_height="wrap_content"/>
 
                     <TextView
@@ -289,7 +288,8 @@
                             android:textSize="20dp"
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/secondary"
-                            android:layout_margin="14dp"
+                            android:layout_margin="16dp"
+                            android:padding="8dp"
                             android:layout_height="wrap_content"/>
 
 
@@ -297,6 +297,7 @@
                             android:layout_width="wrap_content"
                             android:id="@+id/CloseCat"
                             android:visibility="gone"
+                            android:padding="8dp"
                             android:layout_margin="10dp"
                             android:layout_alignParentRight="true"
                             android:layout_gravity="end"
@@ -442,17 +443,28 @@
                         android:layout_gravity="center"
                         android:orientation="horizontal">
 
+                        <Button
+                            android:id="@+id/SearchCategory"
+                            android:layout_width="160dp"
+                            android:textColor="@color/primary"
+                            android:textAllCaps="false"
+                            android:textStyle="bold"
+                            android:textSize="16dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_round_blue"
+                            android:text="Apply Filter"/>
 
 
                         <LinearLayout
                             android:id="@+id/ClearAll"
                             android:layout_width="wrap_content"
+                            android:layout_marginStart="25dp"
                             android:layout_gravity="center"
                             android:layout_height="wrap_content">
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:text="Clear all"
-                                android:textSize="19dp"
+                                android:text="Clear filter"
+                                android:textSize="16dp"
                                 android:textStyle="bold"
                                 android:textColor="@color/secondary"
                                 android:layout_height="wrap_content"/>
@@ -465,22 +477,6 @@
 
                         </LinearLayout>
 
-                        <Button
-                            android:id="@+id/SearchCategory"
-                            android:layout_width="160dp"
-                            android:textColor="@color/primary"
-                            android:textAllCaps="false"
-                            android:textStyle="bold"
-                            android:layout_marginStart="20dp"
-                            android:textSize="16dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/btn_round_blue"
-                            android:text="Apply Filter"/>
-
-
-
-
-
 
 
                     </LinearLayout>
@@ -490,15 +486,10 @@
 
             </androidx.cardview.widget.CardView>
 
-
-
-
         </FrameLayout>
 
 
     </RelativeLayout>
-
-
 
 
 

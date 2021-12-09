@@ -18,9 +18,6 @@ public interface RetrofitInterface {
     @POST("/stk")
     Call<ResponseStk> stk_push(@Body Map<String,Object> pushStk);
 
-    @POST("/stkDeposit")
-    Call<ResponseStk> stk_pushDeposit(@Body Map<String,Object> pushStk);
-
     @POST("/stk_callback")
     Call<ResultStk>  getResponse();
 
@@ -31,8 +28,7 @@ public interface RetrofitInterface {
     Call<StkQuery>   stk_Query  (@Body Map<String ,String> stkQuey);
 
 
-    @POST("/stkDeposit/query")
-    Call<StkQuery>   stk_QueryDeposit(@Body Map<String ,String> stkQuey);
+
 
 
 

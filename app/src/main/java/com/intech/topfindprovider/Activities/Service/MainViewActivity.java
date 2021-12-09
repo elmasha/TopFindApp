@@ -12,11 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +39,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -55,9 +60,12 @@ import com.intech.topfindprovider.Adapters.ProvidersAdapter;
 import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
 import com.intech.topfindprovider.Fragments.Service.FinderProfileFragment;
 import com.intech.topfindprovider.Fragments.Service.MyJobsFragment;
+import com.intech.topfindprovider.Interface.RetrofitInterface;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.Models.Category;
 import com.intech.topfindprovider.Models.Counties;
+import com.intech.topfindprovider.Models.ResponseStk;
+import com.intech.topfindprovider.Models.StkQuery;
 import com.intech.topfindprovider.Models.TopFindProviders;
 import com.intech.topfindprovider.Models.TopFinders;
 import com.intech.topfindprovider.R;
@@ -66,8 +74,16 @@ import com.squareup.picasso.Picasso;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainViewActivity extends AppCompatActivity {
     private long backPressedTime;
@@ -102,6 +118,19 @@ public class MainViewActivity extends AppCompatActivity {
 
     private int dropDownState = 0;
     private int NotifyState = 0;
+
+
+    public  String Product_Id,CheckoutRequestID,ResponseCode,ResultCode,ResponseDescription,ResultDesc;
+    private Retrofit retrofit;
+    private RetrofitInterface retrofitInterface;
+    private String BASE_URL = "https://secure-atoll-77019.herokuapp.com/";
+
+    private static final long START_TIME_IN_MILLIS_COUNT = 27000;
+    private CountDownTimer mCountDownTimer;
+    private boolean mTimerRunning;
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS_COUNT;
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -109,6 +138,10 @@ public class MainViewActivity extends AppCompatActivity {
         FetchCategory();
         FetchCounty();
         LoadDetails();
+        if (County.isEmpty() | Category.isEmpty()){
+            SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
+            SearchCat.setTextColor(Color.parseColor("#808080"));
+        }
     }
 
 
@@ -149,6 +182,14 @@ public class MainViewActivity extends AppCompatActivity {
         countyLayout = findViewById(R.id.onCountyLayout);
         radioGroup = findViewById(R.id.RadioGroupRating);
         experienceSelect = findViewById(R.id.SelectExperience);
+        linearLayoutFilter = findViewById(R.id.Filter);
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
 
 
         experienceSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -186,6 +227,13 @@ public class MainViewActivity extends AppCompatActivity {
         });
 
 
+        catLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Empty Onclick...
+            }
+        });
+
         chooseCounty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,6 +260,8 @@ public class MainViewActivity extends AppCompatActivity {
                 FetchCategory();
                 FetchCounty();
                 FetchProduct();
+                SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
+                SearchCat.setTextColor(Color.parseColor("#808080"));
             }
         });
 
@@ -220,9 +270,9 @@ public class MainViewActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (FilterState == 1){
                     catLayout.setVisibility(View.GONE);
-                    linearLayoutFilter.setVisibility(View.VISIBLE);
-                    closeFilter.setVisibility(View.GONE);
                     FilterState =0;
+                    SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
+                    SearchCat.setTextColor(Color.parseColor("#808080"));
                 }
             }
         });
@@ -239,31 +289,17 @@ public class MainViewActivity extends AppCompatActivity {
         });
 
 
-        linearLayoutFilter = findViewById(R.id.Filter);
 
-
-
-
-
-//        ratingBarFilter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Rating = ratingBarFilter.getNumStars();
-//                ToastBack(Rating+"");
-//            }
-//        });
 
         linearLayoutFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (FilterState == 0){
                     catLayout.setVisibility(View.VISIBLE);
-                    linearLayoutFilter.setVisibility(View.GONE);
                     closeFilter.setVisibility(View.VISIBLE);
                     FilterState =1;
                 }else if (FilterState ==1){
                     catLayout.setVisibility(View.GONE);
-                    linearLayoutFilter.setVisibility(View.VISIBLE);
                     closeFilter.setVisibility(View.GONE);
                     FilterState=0;
                 }
@@ -378,19 +414,9 @@ public class MainViewActivity extends AppCompatActivity {
         SearchCat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (FilterState == 1){
-                    catLayout.setVisibility(View.VISIBLE);
-                    linearLayoutFilter.setVisibility(View.GONE);
-                    closeFilter.setVisibility(View.VISIBLE);
-                    FilterState =0;
-                }else if (FilterState ==0){
-                    catLayout.setVisibility(View.GONE);
-                    linearLayoutFilter.setVisibility(View.VISIBLE);
-                    closeFilter.setVisibility(View.GONE);
-                    FilterState=1;
-                }
                 if (Category != null | County != null){
                     FetchProduct();
+                    catLayout.setVisibility(View.GONE);
                 }
 
             }
@@ -408,6 +434,8 @@ public class MainViewActivity extends AppCompatActivity {
                 RatingSearch = 0;
                 SelectedExp = "";
                 chooseCat.setText("Select category");
+                SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
+                SearchCat.setTextColor(Color.parseColor("#808080"));
                 FetchCategory();
                 FetchCounty();
                 FetchProduct();
@@ -435,6 +463,313 @@ public class MainViewActivity extends AppCompatActivity {
 
         FetchProduct();
 
+    }
+
+
+
+
+
+
+    private ProgressDialog progressStk;
+    private void stk(String requestID,String reqMessage){
+            String Amount = "1";
+            PesaNO = mpesaNo.getText().toString().trim();
+            String PhoneNumber = PesaNO.substring(1);
+            String ID =  FindRequestRef.document().getId();
+            HashMap<String,Object> stk_Push = new HashMap<>();
+            stk_Push.put("User_name",FuserName);
+            stk_Push.put("Email",Femail);
+            stk_Push.put("Phone",Fnumber);
+            stk_Push.put("location",Flocation);
+            stk_Push.put("User_ID",requestID);
+            stk_Push.put("Request_ID",ID);
+            stk_Push.put("Request_message",reqMessage);
+            stk_Push.put("Sender_ID",mAuth.getCurrentUser().getUid());
+            stk_Push.put("timestamp", FieldValue.serverTimestamp());
+            stk_Push.put("Profile_image",FuserImage);
+            stk_Push.put("Phone_no","254"+PhoneNumber);
+            stk_Push.put("Amount",Amount);
+
+
+            Call<ResponseStk> callStk = retrofitInterface.stk_push(stk_Push);
+
+            callStk.enqueue(new Callback<ResponseStk>() {
+                @Override
+                public void onResponse(Call<ResponseStk> call, Response<ResponseStk> response) {
+
+                    if (response.code() == 200) {
+                        newtime();
+                        progressStk = new ProgressDialog(MainViewActivity.this);
+                        progressStk.setCancelable(false);
+                        progressStk.setMessage("Processing payment...");
+                        progressStk.show();
+                        if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                        if (dialog_mpesa != null)dialog_mpesa.dismiss();
+                        noMpesa.setVisibility(View.VISIBLE);
+                        BtnConfirm.setVisibility(View.VISIBLE);
+                        progressBarMpesa.setVisibility(View.INVISIBLE);
+                        ResponseStk responseStk = response.body();
+                        String responeDesc = responseStk.getCustomerMessage();
+                        ResponseCode = responseStk.getResponseCode();
+                        CheckoutRequestID = responseStk.getCheckoutRequestID();
+                        String errorMessage = responseStk.getErrorMessage();
+                        String errorCode = responseStk.getErrorCode();
+                        Log.i("TAG", "CheckoutRequestID: " + response.body());
+
+                        //Toast.makeText(getContext(), responeDesc , Toast.LENGTH_LONG).show();
+
+                        if (responeDesc != null){
+                            if (responeDesc.equals("Success. Request accepted for processing")){
+                                ToastBack(responeDesc);
+                            }else {
+
+                            }
+                        }else {
+
+                            if (errorMessage.equals("No ICCID found on NMS")){
+                                ToastBack("Please provide a valid mpesa number.");
+                                progressStk.dismiss();
+                            }
+                            ToastBack(errorMessage);
+                            progressStk.dismiss();
+                        }
+
+
+                    } else if (response.code() == 404) {
+                        ResponseStk errorResponse = response.body();
+                        ToastBack(errorResponse.getErrorMessage());
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseStk> call, Throwable t) {
+
+                    // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+
+    }
+
+    private void newtime(){
+        new CountDownTimer(15000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (CheckoutRequestID != null){
+                    StkQuery(CheckoutRequestID);
+
+                }else {
+
+                    if (progressStk != null)progressStk.dismiss();
+                    else if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                    //Toast.makeText(getContext(), "StkPush Request timeout...", Toast.LENGTH_LONG).show();
+                    ToastBack("StkPush Request timeout...");
+                    // progressStk.dismiss();
+                }
+            }
+        }.start();
+    }
+
+    private void StkQuery(String checkoutRequestID){
+
+        Map<String ,String > stk_Query = new HashMap<>();
+        stk_Query.put("checkoutRequestId",checkoutRequestID);
+        Call<StkQuery> callQuery = retrofitInterface.stk_Query(stk_Query);
+
+        callQuery.enqueue(new Callback<StkQuery>() {
+            @Override
+            public void onResponse(Call<StkQuery> call, Response<StkQuery> response) {
+
+                if (response != null){
+                    if (response.code()== 200){
+
+                        StkQuery stkQuery1 = response.body();
+                        Toast.makeText(getApplicationContext(), ""+ stkQuery1.getResultDesc(), Toast.LENGTH_SHORT).show();
+                        Log.i("TAG", "onResponse:"+response.body());
+                        String body = stkQuery1.getResultDesc();
+                        ResponseDescription = stkQuery1.getResponseDescription();
+                        ResultCode = stkQuery1.getResultCode();
+                        progressStk.dismiss();
+                        pauseTimer();
+                        resetTimer();
+
+                        if (ResultCode.equals("0")){
+                            new SweetAlertDialog(MainViewActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Order sent successfully..")
+                                    .show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                            dialog_sendRequest.dismiss();
+
+
+                        }else if (ResultCode.equals("1032")){
+                            new SweetAlertDialog(MainViewActivity.this,SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("This payment was cancelled")
+                                    .setConfirmText("Close")
+                                    .show();
+
+
+
+                        }else if (ResultCode.equals("1031")){
+
+                            new SweetAlertDialog(MainViewActivity.this,SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("This payment was cancelled")
+                                    .setConfirmText("Close")
+                                    .show();
+
+
+
+                        }else if (ResultCode.equals("2001")) {
+                            new SweetAlertDialog(MainViewActivity.this,SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Sorry you entered a wrong pin. Try again")
+                                    .setConfirmText("Okay")
+                                    .show();
+
+
+
+
+
+
+                        }else if (ResultCode.equals("1")) {
+                            new SweetAlertDialog(MainViewActivity.this,SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("You current balance is insufficient.")
+                                    .setConfirmText("Close")
+                                    .show();
+
+                        }
+
+
+                    }else if (response.code()==404){
+                        StkQuery errorResponse = response.body();
+                        ToastBack(errorResponse.getErrorMessage());
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<StkQuery> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Now"+ t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressStk.dismiss();
+
+            }
+        });
+
+
+    }
+
+
+    private AlertDialog dialog_mpesa;
+    private EditText mpesaNo;
+    private String PesaNO;
+    private Button BtnConfirm;
+    private TextView noMpesa,mpesaText;
+    private ProgressBar progressBarMpesa;
+    private int phoneState = 0;
+    private void MpesaDialog(String reqMessage,String requestID){
+        final  AlertDialog.Builder mbuilder = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_mpesa, null);
+        mbuilder.setView(mView);
+        mpesaNo = mView.findViewById(R.id.MpesaPhone);
+        BtnConfirm = mView.findViewById(R.id.verify_MpesaNo);
+        progressBarMpesa = mView.findViewById(R.id.progress_MpesaNo);
+        mpesaText = mView.findViewById(R.id.TextMpesa);
+        noMpesa = mView.findViewById(R.id.no);
+        DoubleBounce doubleBounce = new DoubleBounce();
+        progressBarMpesa.setIndeterminateDrawable(doubleBounce);
+
+        mpesaText.setText("Are you sure this "+Fnumber+" is your Mpesa number?");
+        mpesaNo.setText(Fnumber);
+
+
+        noMpesa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (phoneState == 0){
+                    mpesaText.setText("Please enter is your Mpesa number");
+                    mpesaNo.setVisibility(View.VISIBLE);
+                    phoneState =1;
+                    noMpesa.setText("Close");
+                }else if (phoneState == 1){
+                    phoneState = 0;
+                    if (dialog_mpesa != null) dialog_mpesa.dismiss();
+                    noMpesa.setText("No");
+                }
+
+            }
+        });
+
+        BtnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (dialog_sendRequest != null) dialog_sendRequest.dismiss();
+                stk(reqMessage,requestID);
+                startTimer();
+                noMpesa.setVisibility(View.INVISIBLE);
+                BtnConfirm.setVisibility(View.INVISIBLE);
+                progressBarMpesa.setVisibility(View.VISIBLE);
+            }
+        });
+        dialog_mpesa = mbuilder.create();
+        dialog_mpesa.show();
+
+    }
+
+
+
+    //----Stk Timer------
+    private void startTimer() {
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+            @Override
+            public void onFinish() {
+                mTimerRunning = false;
+
+                if (CheckoutRequestID != null){
+                    StkQuery(CheckoutRequestID);
+
+                }else {
+
+                    //if (progressStk != null)progressStk.dismiss();
+                     if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                    //Toast.makeText(getContext(), "StkPush Request timeout...", Toast.LENGTH_LONG).show();
+                    ToastBack("StkPush Request timeout...");
+                    // progressStk.dismiss();
+                }
+
+            }
+        }.start();
+        mTimerRunning = true;
+
+    }
+
+    private void pauseTimer() {
+        mCountDownTimer.cancel();
+        mTimerRunning = false;
+
+    }
+
+    private void resetTimer() {
+        mTimeLeftInMillis = START_TIME_IN_MILLIS_COUNT;
+        updateCountDownText();
+
+    }
+    ///____end stk timer.
+
+    private void updateCountDownText() {
+        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
     }
 
 
@@ -566,7 +901,11 @@ public class MainViewActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 TopFindProviders topFindProviders = document.toObject(TopFindProviders.class);
-                                SendRequest(inputText,topFindProviders.getUser_ID());
+                                if (topFindProviders != null){
+                                    MpesaDialog(inputText,topFindProviders.getUser_ID());
+                                }
+
+
                             }
                         } else {
 
@@ -581,10 +920,9 @@ public class MainViewActivity extends AppCompatActivity {
     private TextView emailInput,usernameInput,Location,ReCancel,ReProfession;
     private EditText ReText;
     private String Reqemail,Requsername,Reqphone,ReqMessage,ReqProfileImage,ReQuestLocation,RequestID,ReqProfession;
-    private Button BtnConfirm;
+    private Button BtnConfirm1;
     private CircleImageView ReQuestImage;
     private LinearLayout google,facebook;
-    private ProgressBar progressBarMpesa;
     private void RequestDialog(){
         final  AlertDialog.Builder mbuilder = new AlertDialog.Builder(this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_send_request, null);
@@ -593,7 +931,7 @@ public class MainViewActivity extends AppCompatActivity {
         dialog_sendRequest.show();
         emailInput = mView.findViewById(R.id.EmailRequest);
         usernameInput = mView.findViewById(R.id.NameRequest);
-        BtnConfirm = mView.findViewById(R.id.SendRequest);
+        BtnConfirm1 = mView.findViewById(R.id.SendRequest);
         Location = mView.findViewById(R.id.LocationRequest);
         ReCancel = mView.findViewById(R.id.CancelRequest);
         ReQuestImage = mView.findViewById(R.id.RequestImage);
@@ -627,14 +965,15 @@ public class MainViewActivity extends AppCompatActivity {
             }
         });
 
-        BtnConfirm.setOnClickListener(new View.OnClickListener() {
+        BtnConfirm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ReqMessage = ReText.getText().toString().trim();
                 if (ReqMessage.isEmpty()){
                     ToastBack("Enter a message");
                 }else {
-                    SendRequest(ReqMessage,RequestID);
+                    if (dialog_sendRequest != null)dialog_sendRequest.dismiss();
+                    MpesaDialog(RequestID,ReqMessage);
                 }
 
                 }
@@ -670,6 +1009,10 @@ public class MainViewActivity extends AppCompatActivity {
                         catOfChoice.setVisibility(View.VISIBLE);
                         catOfChoice.setText(pickedCat);
                     }
+                    if (County != null | Category != null){
+                        SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
+                        SearchCat.setTextColor(Color.parseColor("#2BB66A"));
+                    }
                     // FetchProduct();
                 }
 
@@ -697,6 +1040,10 @@ public class MainViewActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Counties counties = documentSnapshot.toObject(Counties.class);
                 County = counties.getCounty();
+                if (County != null | Category != null){
+                    SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
+                    SearchCat.setTextColor(Color.parseColor("#2BB66A"));
+                }
             }
         });
 
@@ -721,6 +1068,10 @@ public class MainViewActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Category category = documentSnapshot.toObject(Category.class);
                 Category = category.getCategory();
+                if (County != null | Category != null){
+                    SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
+                    SearchCat.setTextColor(Color.parseColor("#2BB66A"));
+                }
             }
         });
 
@@ -848,7 +1199,6 @@ public class MainViewActivity extends AppCompatActivity {
     private Snackbar snackbar;
     private void SendRequest(String msg ,String id){
         String ID =  FindRequestRef.document().getId();
-
         HashMap<String,Object> request = new HashMap<>();
         request.put("User_name",FuserName);
         request.put("Email",Femail);
@@ -896,11 +1246,6 @@ public class MainViewActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
 
 
     private void Notify(String id){

@@ -46,8 +46,12 @@ public class ProvidersAdapter extends FirestoreRecyclerAdapter<TopFindProviders,
 
         if(context != null | model.getProfile_image() != null) {
             Picasso.with(context).load(model.getProfile_image())
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.error_profile)
+                    .into(holder.profile);
+        }else if (model.getProfile_image() == null){
+            Picasso.with(context).load("")
+                    .error(R.drawable.error_profile)
                     .into(holder.profile);
         }
 

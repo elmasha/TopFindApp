@@ -18,12 +18,10 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/row_image"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:layout_height="80dp"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/primary"
+                android:layout_height="70dp"
                 android:src="@drawable/user" />
 
 
@@ -98,15 +96,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/primary"
-                        android:textSize="17dp"
+                        android:textColor="@color/secondary"
+                        android:textSize="16dp"
+                        android:drawableRight="@drawable/ic_double_arrow_right_28"
+                        android:padding="4dp"
                         android:textStyle="bold"
-                        android:text="View more"/>
+                        android:text="Send request"/>
 
                     <com.getbase.floatingactionbutton.FloatingActionButton
                         android:id="@+id/ViewMore"
                         android:layout_width="wrap_content"
                         app:fab_size="mini"
+                        android:visibility="gone"
                         android:layout_gravity="center"
                         app:fab_colorNormal="@color/white"
                         app:fab_colorPressed="@color/primary"
