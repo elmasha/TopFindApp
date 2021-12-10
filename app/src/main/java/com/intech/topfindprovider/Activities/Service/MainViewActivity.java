@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.multidex.BuildConfig;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -94,12 +96,11 @@ public class MainViewActivity extends AppCompatActivity {
     CollectionReference FindRequestRef = db.collection("TopFind_Request");
     CollectionReference CategoryRef = db.collection("Category");
     CollectionReference CountyRef = db.collection("County");
-
     private CircleImageView profileImage;
 
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private FrameLayout catLayout,countyLayout;
+    private FrameLayout catLayout,countyLayout,FrameMain;
     private LinearLayout linearLayoutSearch,linearLayoutFilter,ClearAll;
     private ProvidersAdapter adapter;
     private CategoryAdapter categoryAdapter;
@@ -139,6 +140,7 @@ public class MainViewActivity extends AppCompatActivity {
         FetchCounty();
         LoadDetails();
         if (County.isEmpty() | Category.isEmpty()){
+            SearchCat.setEnabled(false);
             SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
             SearchCat.setTextColor(Color.parseColor("#808080"));
         }
@@ -151,6 +153,7 @@ public class MainViewActivity extends AppCompatActivity {
     private NavigationView nv;
     private int FilterState = 0;
     private int countyState = 0;
+    private int position;
     private RadioGroup radioGroup;
     private long RatingSearch = 0;
     private String SelectedExp;
@@ -183,6 +186,9 @@ public class MainViewActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.RadioGroupRating);
         experienceSelect = findViewById(R.id.SelectExperience);
         linearLayoutFilter = findViewById(R.id.Filter);
+        FrameMain = findViewById(R.id.Frame_main);
+
+
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -195,12 +201,25 @@ public class MainViewActivity extends AppCompatActivity {
         experienceSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    SelectedExp = experienceSelect.getSelectedItem().toString();
+
+                    if(i ==0){
+                        SelectedExp = "";
+                    }else {
+
+                        position = experienceSelect.getSelectedItemPosition();
+                        if (position !=1){
+                            SelectedExp = experienceSelect.getSelectedItem().toString();
+                            SearchCat.setEnabled(true);
+                            SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
+                            SearchCat.setTextColor(Color.parseColor("#2BB66A"));
+                        }
+
+                    }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                SelectedExp = "";
             }
         });
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -260,6 +279,7 @@ public class MainViewActivity extends AppCompatActivity {
                 FetchCategory();
                 FetchCounty();
                 FetchProduct();
+                SearchCat.setEnabled(false);
                 SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
                 SearchCat.setTextColor(Color.parseColor("#808080"));
             }
@@ -271,6 +291,7 @@ public class MainViewActivity extends AppCompatActivity {
                 if (FilterState == 1){
                     catLayout.setVisibility(View.GONE);
                     FilterState =0;
+                    SearchCat.setEnabled(false);
                     SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
                     SearchCat.setTextColor(Color.parseColor("#808080"));
                 }
@@ -354,7 +375,7 @@ public class MainViewActivity extends AppCompatActivity {
                         if (dl.isDrawerOpen(GravityCompat.START)){
                             dl.closeDrawer(GravityCompat.START);
                         }
-                        Toast.makeText(MainViewActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                       // shareApp(getApplicationContext());
                         break;
                     case R.id.refer:
                         if (dl.isDrawerOpen(GravityCompat.START)){
@@ -434,6 +455,7 @@ public class MainViewActivity extends AppCompatActivity {
                 RatingSearch = 0;
                 SelectedExp = "";
                 chooseCat.setText("Select category");
+                SearchCat.setEnabled(false);
                 SearchCat.setBackgroundResource(R.drawable.btn_round_grey);
                 SearchCat.setTextColor(Color.parseColor("#808080"));
                 FetchCategory();
@@ -466,6 +488,17 @@ public class MainViewActivity extends AppCompatActivity {
     }
 
 
+    public static void shareApp(Context context) {
+        final String appPackageName = BuildConfig.APPLICATION_ID;
+        final String appName = context.getString(R.string.app_name);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareBodyText = "https://play.google.com/store/apps/details?id=" +
+                appPackageName;
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, appName);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText);
+        context.startActivity(Intent.createChooser(shareIntent, "Share with"));
+    }
 
 
 
@@ -600,7 +633,7 @@ public class MainViewActivity extends AppCompatActivity {
 
                         if (ResultCode.equals("0")){
                             new SweetAlertDialog(MainViewActivity.this,SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText("Order sent successfully..")
+                                    .setTitleText("Request sent successfully..")
                                     .show();
                             progressBar.setVisibility(View.INVISIBLE);
                             dialog_sendRequest.dismiss();
@@ -1010,6 +1043,7 @@ public class MainViewActivity extends AppCompatActivity {
                         catOfChoice.setText(pickedCat);
                     }
                     if (County != null | Category != null){
+                        SearchCat.setEnabled(true);
                         SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
                         SearchCat.setTextColor(Color.parseColor("#2BB66A"));
                     }
@@ -1041,6 +1075,7 @@ public class MainViewActivity extends AppCompatActivity {
                 Counties counties = documentSnapshot.toObject(Counties.class);
                 County = counties.getCounty();
                 if (County != null | Category != null){
+                    SearchCat.setEnabled(true);
                     SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
                     SearchCat.setTextColor(Color.parseColor("#2BB66A"));
                 }
@@ -1069,6 +1104,7 @@ public class MainViewActivity extends AppCompatActivity {
                 Category category = documentSnapshot.toObject(Category.class);
                 Category = category.getCategory();
                 if (County != null | Category != null){
+                    SearchCat.setEnabled(true);
                     SearchCat.setBackgroundResource(R.drawable.btn_round_blue);
                     SearchCat.setTextColor(Color.parseColor("#2BB66A"));
                 }

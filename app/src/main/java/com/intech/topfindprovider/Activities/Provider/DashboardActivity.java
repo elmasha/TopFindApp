@@ -3,11 +3,13 @@ package com.intech.topfindprovider.Activities.Provider;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,12 +29,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.intech.topfindprovider.BuildConfig;
 import com.intech.topfindprovider.Fragments.Provider.ProviderJobsFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderNotificationFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderProfileFragment;
 import com.intech.topfindprovider.Fragments.Provider.ProviderRequestFragment;
 import com.intech.topfindprovider.Fragments.Provider.ReviewsFragment;
 import com.intech.topfindprovider.Fragments.Service.FinderNotificationFragment;
+import com.intech.topfindprovider.Fragments.Service.FinderProfileFragment;
 import com.intech.topfindprovider.Fragments.Service.MyJobsFragment;
 import com.intech.topfindprovider.MainActivity;
 import com.intech.topfindprovider.R;
@@ -110,34 +114,43 @@ public class DashboardActivity extends AppCompatActivity {
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
                 Fragment SelectedFragment1 = null;
-                switch (id) {
+                switch (item.getItemId()) {
                     case R.id.account:
                         if (dl.isDrawerOpen(GravityCompat.START)){
                         dl.closeDrawer(GravityCompat.START);
                     }
-                        SelectedFragment1 = new ProviderProfileFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.Frame_provider,
+                                new ProviderProfileFragment()).commit();
 
                         break;
                     case R.id.myJobs:
                         if (dl.isDrawerOpen(GravityCompat.START)){
                             dl.closeDrawer(GravityCompat.START);
                         }
-                        SelectedFragment1 = new ProviderJobsFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.Frame_provider,
+                                new ProviderJobsFragment()).commit();
+                        break;
+                    case R.id.request:
+                        if (dl.isDrawerOpen(GravityCompat.START)){
+                            dl.closeDrawer(GravityCompat.START);
+                        }
+                        getSupportFragmentManager().beginTransaction().replace(R.id.Frame_provider,
+                                new ProviderRequestFragment()).commit();
                         break;
                     case R.id.notification:
 
                         if (dl.isDrawerOpen(GravityCompat.START)){
                             dl.closeDrawer(GravityCompat.START);
                         }
-                        SelectedFragment1 = new ProviderNotificationFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.Frame_provider,
+                                new ProviderNotificationFragment()).commit();
                         break;
                     case R.id.share:
                         if (dl.isDrawerOpen(GravityCompat.START)){
                             dl.closeDrawer(GravityCompat.START);
                         }
-
+                        //shareApp(getApplicationContext());
                         break;
                     case R.id.refer:
                         if (dl.isDrawerOpen(GravityCompat.START)){
@@ -167,6 +180,18 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
+
+    private static void shareApp(Context context) {
+        final String appPackageName = BuildConfig.APPLICATION_ID;
+        final String appName = context.getString(R.string.app_name);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareBodyText = "https://play.google.com/store/apps/details?id=" +
+                appPackageName;
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, appName);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText);
+        context.startActivity(Intent.createChooser(shareIntent, "Share With"));
+    }
 
 
     private AlertDialog dialog2;

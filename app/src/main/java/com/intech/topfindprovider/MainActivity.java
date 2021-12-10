@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.intech.topfindprovider.Activities.Provider.LoginActivity;
+import com.intech.topfindprovider.Activities.Provider.ProviderLoginActivity;
 import com.intech.topfindprovider.Activities.Service.FinderLoginActivity;
 import com.intech.topfindprovider.Adapters.SlideAdpter;
 
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (TAG.equals("Provider")){
 
-                    Intent toCreate = new Intent(getApplicationContext(), LoginActivity.class);
+                    Intent toCreate = new Intent(getApplicationContext(), ProviderLoginActivity.class);
                     startActivity(toCreate);
 
                 }else if (TAG.equals("Service")){

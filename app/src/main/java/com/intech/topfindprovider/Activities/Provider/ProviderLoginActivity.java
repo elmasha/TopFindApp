@@ -36,7 +36,7 @@ import com.intech.topfindprovider.R;
 
 import java.util.HashMap;
 
-public class LoginActivity extends AppCompatActivity {
+public class ProviderLoginActivity extends AppCompatActivity {
     private TextView toRegister,toMain;
 
     FirebaseAuth mAuth;

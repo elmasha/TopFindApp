@@ -43,7 +43,7 @@
 
         <activity android:name=".Activities.Provider.DashboardActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".Activities.Provider.LoginActivity" />
+        <activity android:name=".Activities.Provider.ProviderLoginActivity" />
         <activity android:name=".Activities.Provider.ProviderRegisterActivity" />
         <activity android:name=".Splash_Activity">
             <intent-filter>

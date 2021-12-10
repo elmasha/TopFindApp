@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class FinderProfileActivity extends AppCompatActivity {
     private int editState = 0;
     private LinearLayout editLayout,primeLayout,editButton;
     private Button BtnSaveChanges;
+    private RelativeLayout relativeLayout;
 
     @Override
     protected void onStart() {
@@ -94,6 +96,13 @@ public class FinderProfileActivity extends AppCompatActivity {
         BtnSaveChanges = findViewById(R.id.edit_Tf_saveChanges);
         closeEdit = findViewById(R.id.closeEdit);
         editButton = findViewById(R.id.editLayout);
+        relativeLayout = findViewById(R.id.layoutProfile);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //----Empty----///
+            }
+        });
 
 
 

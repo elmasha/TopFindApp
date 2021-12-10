@@ -17,6 +17,10 @@
                 <item android:id="@+id/myJobs"
                     android:icon="@drawable/ic_groups_24"
                     android:title="My Jobs"/>
+
+                <item android:id="@+id/request"
+                    android:icon="@drawable/ic_group_add_24"
+                    android:title="My request"/>
             </menu>
 
         </item>

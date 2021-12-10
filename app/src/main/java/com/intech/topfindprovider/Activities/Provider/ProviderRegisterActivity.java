@@ -2,6 +2,7 @@ package com.intech.topfindprovider.Activities.Provider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -11,14 +12,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +31,7 @@ import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
 import com.chootdev.csnackbar.Type;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,7 +46,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.intech.topfindprovider.Activities.Service.MainViewActivity;
+import com.intech.topfindprovider.Interface.RetrofitInterface;
 import com.intech.topfindprovider.MainActivity;
+import com.intech.topfindprovider.Models.ResponseStk;
+import com.intech.topfindprovider.Models.StkQuery;
 import com.intech.topfindprovider.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -51,10 +59,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.theartofdev.edmodo.cropper.CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE;
 
@@ -83,6 +99,15 @@ public class ProviderRegisterActivity extends AppCompatActivity {
     private Spinner Experience,PaymentMethod;
     private String username,email,password,rpassword,phone,location,profession,experience,payment,narration;
 
+    public  String Product_Id,CheckoutRequestID,ResponseCode,ResultCode,ResponseDescription,ResultDesc;
+    private Retrofit retrofit;
+    private RetrofitInterface retrofitInterface;
+    private String BASE_URL = "https://secure-atoll-77019.herokuapp.com/";
+
+    private static final long START_TIME_IN_MILLIS_COUNT = 27000;
+    private CountDownTimer mCountDownTimer;
+    private boolean mTimerRunning;
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS_COUNT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +132,12 @@ public class ProviderRegisterActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
 
         add_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +162,8 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
                 }else {
 
-                    EmailPassRegistration();
+                    MpesaDialog();
+
 
                 }
             }
@@ -147,11 +179,322 @@ public class ProviderRegisterActivity extends AppCompatActivity {
         toLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), ProviderLoginActivity.class));
             }
         });
 
     }
+
+
+
+
+    private ProgressDialog progressStk;
+    private void stk(){
+        String Amount = "1";
+        PesaNO = mpesaNo.getText().toString().trim();
+        String PhoneNumber = PesaNO.substring(1);
+        String ID =  TopFindRef.document().getId();
+        HashMap<String,Object> stk_Push = new HashMap<>();
+//        stk_Push.put("User_name",FuserName);
+//        stk_Push.put("Email",Femail);
+//        stk_Push.put("Phone",Fnumber);
+//        stk_Push.put("location",Flocation);
+//        stk_Push.put("User_ID",requestID);
+//        stk_Push.put("Request_ID",ID);
+//        stk_Push.put("Request_message",reqMessage);
+//        stk_Push.put("Sender_ID",mAuth.getCurrentUser().getUid());
+//        stk_Push.put("timestamp", FieldValue.serverTimestamp());
+//        stk_Push.put("Profile_image",FuserImage);
+//        stk_Push.put("Phone_no","254"+PhoneNumber);
+//        stk_Push.put("Amount",Amount);
+
+
+        Call<ResponseStk> callStk = retrofitInterface.stk_push(stk_Push);
+
+        callStk.enqueue(new Callback<ResponseStk>() {
+            @Override
+            public void onResponse(Call<ResponseStk> call, Response<ResponseStk> response) {
+
+                if (response.code() == 200) {
+                    newtime();
+                    progressStk = new ProgressDialog(ProviderRegisterActivity.this);
+                    progressStk.setCancelable(false);
+                    progressStk.setMessage("Processing payment...");
+                    progressStk.show();
+                    if (dialog_mpesa != null)dialog_mpesa.dismiss();
+                    noMpesa.setVisibility(View.VISIBLE);
+                    BtnConfirm.setVisibility(View.VISIBLE);
+                    progressBarMpesa.setVisibility(View.INVISIBLE);
+                    ResponseStk responseStk = response.body();
+                    String responeDesc = responseStk.getCustomerMessage();
+                    ResponseCode = responseStk.getResponseCode();
+                    CheckoutRequestID = responseStk.getCheckoutRequestID();
+                    String errorMessage = responseStk.getErrorMessage();
+                    String errorCode = responseStk.getErrorCode();
+                    Log.i("TAG", "CheckoutRequestID: " + response.body());
+
+                    //Toast.makeText(getContext(), responeDesc , Toast.LENGTH_LONG).show();
+
+                    if (responeDesc != null){
+                        if (responeDesc.equals("Success. Request accepted for processing")){
+                            ToastBack(responeDesc);
+                        }else {
+
+                        }
+                    }else {
+
+                        if (errorMessage.equals("No ICCID found on NMS")){
+                            ToastBack("Please provide a valid mpesa number.");
+                            progressStk.dismiss();
+                        }
+                        ToastBack(errorMessage);
+                        progressStk.dismiss();
+                    }
+
+
+                } else if (response.code() == 404) {
+                    ResponseStk errorResponse = response.body();
+                    ToastBack(errorResponse.getErrorMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseStk> call, Throwable t) {
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+
+    }
+
+    private void newtime(){
+        new CountDownTimer(15000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (CheckoutRequestID != null){
+                    StkQuery(CheckoutRequestID);
+
+                }else {
+
+                    if (progressStk != null)progressStk.dismiss();
+                    else if (dialog_mpesa != null)dialog_mpesa.dismiss();
+                    //Toast.makeText(getContext(), "StkPush Request timeout...", Toast.LENGTH_LONG).show();
+                    ToastBack("StkPush Request timeout...");
+                    // progressStk.dismiss();
+                }
+            }
+        }.start();
+    }
+
+    private void StkQuery(String checkoutRequestID){
+
+        Map<String ,String > stk_Query = new HashMap<>();
+        stk_Query.put("checkoutRequestId",checkoutRequestID);
+        Call<StkQuery> callQuery = retrofitInterface.stk_Query(stk_Query);
+
+        callQuery.enqueue(new Callback<StkQuery>() {
+            @Override
+            public void onResponse(Call<StkQuery> call, Response<StkQuery> response) {
+
+                if (response != null){
+                    if (response.code()== 200){
+
+                        StkQuery stkQuery1 = response.body();
+                        Toast.makeText(getApplicationContext(), ""+ stkQuery1.getResultDesc(), Toast.LENGTH_SHORT).show();
+                        Log.i("TAG", "onResponse:"+response.body());
+                        String body = stkQuery1.getResultDesc();
+                        ResponseDescription = stkQuery1.getResponseDescription();
+                        ResultCode = stkQuery1.getResultCode();
+                        progressStk.dismiss();
+                        pauseTimer();
+                        resetTimer();
+
+                        if (ResultCode.equals("0")){
+                            new SweetAlertDialog(ProviderRegisterActivity.this,SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Registration successfully..")
+                                    .show();
+                            EmailPassRegistration();
+
+
+                        }else if (ResultCode.equals("1032")){
+                            new SweetAlertDialog(ProviderRegisterActivity.this,SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("This payment was cancelled")
+                                    .setConfirmText("Close")
+                                    .show();
+
+
+
+                        }else if (ResultCode.equals("1031")){
+
+                            new SweetAlertDialog(ProviderRegisterActivity.this,SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("This payment was cancelled")
+                                    .setConfirmText("Close")
+                                    .show();
+
+
+
+                        }else if (ResultCode.equals("2001")) {
+                            new SweetAlertDialog(ProviderRegisterActivity.this,SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Sorry you entered a wrong pin. Try again")
+                                    .setConfirmText("Okay")
+                                    .show();
+
+
+
+
+
+
+                        }else if (ResultCode.equals("1")) {
+                            new SweetAlertDialog(ProviderRegisterActivity.this,SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("You current balance is insufficient.")
+                                    .setConfirmText("Close")
+                                    .show();
+
+                        }
+
+
+                    }else if (response.code()==404){
+                        StkQuery errorResponse = response.body();
+                        ToastBack(errorResponse.getErrorMessage());
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<StkQuery> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Now"+ t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressStk.dismiss();
+
+            }
+        });
+
+
+    }
+
+
+    private AlertDialog dialog_mpesa;
+    private EditText mpesaNo;
+    private String PesaNO;
+    private Button BtnConfirm;
+    private TextView noMpesa,mpesaText;
+    private ProgressBar progressBarMpesa;
+    private int phoneState = 0;
+    private void MpesaDialog(){
+        final  AlertDialog.Builder mbuilder = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_mpesa, null);
+        mbuilder.setView(mView);
+        mpesaNo = mView.findViewById(R.id.MpesaPhone);
+        BtnConfirm = mView.findViewById(R.id.verify_MpesaNo);
+        progressBarMpesa = mView.findViewById(R.id.progress_MpesaNo);
+        mpesaText = mView.findViewById(R.id.TextMpesa);
+        noMpesa = mView.findViewById(R.id.no);
+        DoubleBounce doubleBounce = new DoubleBounce();
+        progressBarMpesa.setIndeterminateDrawable(doubleBounce);
+
+        mpesaText.setText("Are you sure this "+phone+" is your Mpesa number?");
+        mpesaNo.setText(phone);
+
+
+        noMpesa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (phoneState == 0){
+                    mpesaText.setText("Please enter is your Mpesa number");
+                    mpesaNo.setVisibility(View.VISIBLE);
+                    phoneState =1;
+                    noMpesa.setText("Close");
+                }else if (phoneState == 1){
+                    phoneState = 0;
+                    if (dialog_mpesa != null) dialog_mpesa.dismiss();
+                    noMpesa.setText("No");
+                }
+
+            }
+        });
+
+        BtnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (phone.isEmpty()){
+                    ToastBack("Please provide your Mpesa Number");
+                }else {
+                    stk();
+                    startTimer();
+                    noMpesa.setVisibility(View.INVISIBLE);
+                    BtnConfirm.setVisibility(View.INVISIBLE);
+                    progressBarMpesa.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+        dialog_mpesa = mbuilder.create();
+        dialog_mpesa.show();
+
+    }
+
+
+
+    //----Stk Timer------
+    private void startTimer() {
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+            @Override
+            public void onFinish() {
+                mTimerRunning = false;
+
+                if (CheckoutRequestID != null){
+                    StkQuery(CheckoutRequestID);
+
+                }else {
+
+                    //if (progressStk != null)progressStk.dismiss();
+                    if (dialog_mpesa != null)dialog_mpesa.dismiss();
+                    //Toast.makeText(getContext(), "StkPush Request timeout...", Toast.LENGTH_LONG).show();
+                    ToastBack("StkPush Request timeout...");
+                    // progressStk.dismiss();
+                }
+
+            }
+        }.start();
+        mTimerRunning = true;
+
+    }
+
+    private void pauseTimer() {
+        mCountDownTimer.cancel();
+        mTimerRunning = false;
+
+    }
+
+    private void resetTimer() {
+        mTimeLeftInMillis = START_TIME_IN_MILLIS_COUNT;
+        updateCountDownText();
+
+    }
+    ///____end stk timer.
+
+    private void updateCountDownText() {
+        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+
+
+
+
 
 
     ProgressDialog progressDialog;
