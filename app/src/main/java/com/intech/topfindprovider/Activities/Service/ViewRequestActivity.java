@@ -43,7 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewRequestActivity extends AppCompatActivity {
     private String ID;
-    private TextView UserName,Email,Phone,Location,logout,Narration,Profession,Experience;
+    private TextView UserName,Email,Phone,Location,logout,Narration,Profession,Experience,ToProfile;
     private CircleImageView ProfileImage;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -74,6 +74,14 @@ public class ViewRequestActivity extends AppCompatActivity {
         Delete = findViewById(R.id.DeleteProvider);
         Call = findViewById(R.id.CallProvider);
         Sms = findViewById(R.id.SmsProvider);
+        ToProfile = findViewById(R.id.BackToProfile);
+
+        ToProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
+            }
+        });
 
 
         Sms.setOnClickListener(new View.OnClickListener() {
