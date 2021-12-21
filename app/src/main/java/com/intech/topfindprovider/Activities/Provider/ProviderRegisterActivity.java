@@ -42,6 +42,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -49,6 +51,7 @@ import com.google.firebase.storage.UploadTask;
 import com.intech.topfindprovider.Activities.Service.MainViewActivity;
 import com.intech.topfindprovider.Interface.RetrofitInterface;
 import com.intech.topfindprovider.MainActivity;
+import com.intech.topfindprovider.Models.Category;
 import com.intech.topfindprovider.Models.ResponseStk;
 import com.intech.topfindprovider.Models.StkQuery;
 import com.intech.topfindprovider.R;
@@ -161,10 +164,8 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                 if (!validation()){
 
                 }else {
-
-                    MpesaDialog();
-
-
+                    profession = Profession.getEditText().getText().toString();
+                    EmailPassRegistration();
                 }
             }
         });
@@ -494,7 +495,51 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
 
 
+    private boolean infoState = false;
+    void LoadSelectedCandidate(){
+        TopFindCategory.whereEqualTo("category",profession)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
 
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Category  category = document.toObject(Category.class);
+                        if (category.getCategory() != null){
+                            infoState = true;
+                            ToastBack(category.getCategory());
+
+                            if (profession.equals(category.getCategory())){
+                                infoState = true;
+                                checkCat(infoState);
+                            }else if (category == null){
+                                infoState = false;
+                                checkCat(infoState);
+                            }
+
+                        }else {
+
+                        }
+                        ToastBack(category.getCategory());
+                    }
+                }else {
+                    ToastBack(task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    private void checkCat(boolean infoState2) {
+
+        if (infoState2 == true){
+            Store_Image_and_Details(profession);
+        }else if (infoState2 == false){
+            New_Store_Image_and_Details(profession);
+
+        }
+
+    }
 
 
     ProgressDialog progressDialog;
@@ -513,9 +558,10 @@ public class ProviderRegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Store_Image_and_Details();
+                           LoadSelectedCandidate();
                         }else {
                             showSnackBackOffline(getApplicationContext(),task.getException().getMessage());
+                            progressDialog.dismiss();
                         }
                     }
                 });
@@ -523,7 +569,7 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
     }
 
-    private void Store_Image_and_Details() {
+    private void Store_Image_and_Details(String profession) {
 
 
         if (ImageUri != null){
@@ -538,7 +584,125 @@ public class ProviderRegisterActivity extends AppCompatActivity {
             experience = Experience.getSelectedItem().toString();
             payment = PaymentMethod.getSelectedItem().toString();
             narration = Narration.getEditText().getText().toString();
-            profession = Profession.getEditText().getText().toString();
+
+
+
+
+            try {
+                Compressor compressor = new Compressor(this);
+                compressor.setMaxHeight(200);
+                compressor.setMaxWidth(200);
+                compressor.setQuality(10);
+                compressedImageBitmap = compressor.compressToBitmap(newimage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+            final byte[] data = baos.toByteArray();
+
+
+            final StorageReference ref = storageReference.child("Users/thumbs" + UUID.randomUUID().toString());
+            uploadTask = ref.putBytes(data);
+
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    Uri downloadUri = task.getResult();
+                    String profileImage = downloadUri.toString();
+
+                    String token_Id = FirebaseInstanceId.getInstance().getToken();
+                    HashMap<String,Object> store = new HashMap<>();
+                    store.put("User_name",username);
+                    store.put("Email",email);
+                    store.put("Phone",phone);
+                    store.put("location",location);
+                    store.put("Experience",experience);
+                    store.put("Payment",payment);
+                    store.put("Narration",narration);
+                    store.put("Profession",profession);
+                    store.put("device_token",token_Id);
+                    store.put("ratings",0);
+                    store.put("User_ID",mAuth.getCurrentUser().getUid());
+                    store.put("Profile_image",profileImage);
+                    store.put("date_registered", FieldValue.serverTimestamp());
+
+                    String DOC_id = TopFindCategory.document().getId();
+
+                    HashMap<String,Object> storeCategory = new HashMap<>();
+                    storeCategory.put("category",profession);
+                    storeCategory.put("category_ID",DOC_id);
+
+                    TopFindRef.document(mAuth.getCurrentUser().getUid())
+                            .set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
+
+                            if (task.isSuccessful()){
+                                Intent logout = new Intent(getApplicationContext(), DashboardActivity.class);
+                                showSnackBarOnline(getBaseContext(),"Registration was successful.");
+                                startActivity(logout);
+                            }else {
+
+                                showSnackBackOffline(getBaseContext(),task.getException().getMessage());
+                                progressDialog.dismiss();
+
+                            }
+                        }
+                    });
+
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+
+                    showSnackBackOffline(getBaseContext(),e.getMessage());
+
+                }
+            });
+
+        }else {
+
+            ToastBack("No image selected");
+
+        }
+
+
+
+
+    }
+
+
+    private void New_Store_Image_and_Details(String profession) {
+
+
+        if (ImageUri != null){
+
+            File newimage = new File(ImageUri.getPath());
+            username = Username.getEditText().getText().toString();
+            email = Email.getEditText().getText().toString();
+            password = Password.getEditText().getText().toString();
+            rpassword = RPassword.getEditText().getText().toString();
+            phone = Phone.getEditText().getText().toString();
+            location = Location.getEditText().getText().toString();
+            experience = Experience.getSelectedItem().toString();
+            payment = PaymentMethod.getSelectedItem().toString();
+            narration = Narration.getEditText().getText().toString();
+
 
 
 
@@ -603,35 +767,35 @@ public class ProviderRegisterActivity extends AppCompatActivity {
 
                     TopFindCategory.document(DOC_id).set(storeCategory)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
 
-                                TopFindRef.document(mAuth.getCurrentUser().getUid())
-                                        .set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
+                                        TopFindRef.document(mAuth.getCurrentUser().getUid())
+                                                .set(store).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
 
-                                        if (task.isSuccessful()){
-                                            Intent logout = new Intent(getApplicationContext(), DashboardActivity.class);
-                                            showSnackBarOnline(getBaseContext(),"Registration was successful.");
-                                            startActivity(logout);
-                                        }else {
+                                                if (task.isSuccessful()){
+                                                    Intent logout = new Intent(getApplicationContext(), DashboardActivity.class);
+                                                    showSnackBarOnline(getBaseContext(),"Registration was successful.");
+                                                    startActivity(logout);
+                                                }else {
 
-                                            showSnackBackOffline(getBaseContext(),task.getException().getMessage());
-                                            progressDialog.dismiss();
+                                                    showSnackBackOffline(getBaseContext(),task.getException().getMessage());
+                                                    progressDialog.dismiss();
 
-                                        }
+                                                }
+                                            }
+                                        });
+
+
+                                    }else {
+
+                                        showSnackBackOffline(getBaseContext(),task.getException().getMessage());
                                     }
-                                });
-
-
-                            }else {
-
-                                showSnackBackOffline(getBaseContext(),task.getException().getMessage());
-                            }
-                        }
-                    });
+                                }
+                            });
 
 
                 }

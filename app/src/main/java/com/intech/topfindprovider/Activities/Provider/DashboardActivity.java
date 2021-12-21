@@ -203,6 +203,8 @@ public class DashboardActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         dialog2 = builder.create();
         dialog2.show();
+        builder.setTitle("Log Out");
+        builder.setIcon(R.drawable.logout);
         builder.setMessage("Are you sure to Log out..\n");
         builder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
