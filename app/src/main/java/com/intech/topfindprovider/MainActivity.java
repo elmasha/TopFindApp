@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
         NextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
